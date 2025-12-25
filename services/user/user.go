@@ -49,12 +49,11 @@ func (u *UserService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 
 	expirationTime := time.Now().Add(time.Duration(config.Config.JwtExpirationTime) * time.Minute).Unix()
 	data := &dto.UserResponse{
-		UUID:        user.UUID,
-		Name:        user.Name,
-		Username:    user.Username,
-		PhoneNumber: user.PhoneNumber,
-		Email:       user.Email,
-		Role:        strings.ToLower(user.Role.Code),
+		UUID:     user.UUID,
+		Name:     user.Name,
+		Username: user.Username,
+		Email:    user.Email,
+		Role:     strings.ToLower(user.Role.Code),
 	}
 
 	claims := &Claims{
@@ -123,12 +122,11 @@ func (u *UserService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 	}
 
 	user, err := u.repository.GetUser().Register(ctx, &dto.RegisterRequest{
-		Name:        req.Name,
-		Username:    req.Username,
-		Password:    string(hashedPassword),
-		PhoneNumber: req.PhoneNumber,
-		Email:       req.Email,
-		RoleID:      constants.User,
+		Name:     req.Name,
+		Username: req.Username,
+		Password: string(hashedPassword),
+		Email:    req.Email,
+		RoleID:   constants.User,
 	})
 	if err != nil {
 		return nil, err
@@ -136,11 +134,10 @@ func (u *UserService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 
 	response := &dto.RegisterResponse{
 		User: dto.UserResponse{
-			UUID:        user.UUID,
-			Name:        user.Name,
-			Username:    user.Username,
-			PhoneNumber: user.PhoneNumber,
-			Email:       user.Email,
+			UUID:     user.UUID,
+			Name:     user.Name,
+			Username: user.Username,
+			Email:    user.Email,
 		},
 	}
 
@@ -198,22 +195,20 @@ func (u *UserService) Update(ctx context.Context, request *dto.UpdateRequest, uu
 	}
 
 	userResult, err = u.repository.GetUser().Update(ctx, &dto.UpdateRequest{
-		Name:        request.Name,
-		Username:    request.Username,
-		Password:    &password,
-		Email:       request.Email,
-		PhoneNumber: request.PhoneNumber,
+		Name:     request.Name,
+		Username: request.Username,
+		Password: &password,
+		Email:    request.Email,
 	}, uuid)
 	if err != nil {
 		return nil, err
 	}
 
 	data = dto.UserResponse{
-		UUID:        userResult.UUID,
-		Name:        userResult.Name,
-		Username:    userResult.Username,
-		PhoneNumber: userResult.PhoneNumber,
-		Email:       userResult.Email,
+		UUID:     userResult.UUID,
+		Name:     userResult.Name,
+		Username: userResult.Username,
+		Email:    userResult.Email,
 	}
 
 	return &data, nil
@@ -226,12 +221,11 @@ func (u *UserService) GetUserLogin(ctx context.Context) (*dto.UserResponse, erro
 	)
 
 	data = dto.UserResponse{
-		UUID:        userLogin.UUID,
-		Name:        userLogin.Name,
-		Username:    userLogin.Username,
-		PhoneNumber: userLogin.PhoneNumber,
-		Email:       userLogin.Email,
-		Role:        userLogin.Role,
+		UUID:     userLogin.UUID,
+		Name:     userLogin.Name,
+		Username: userLogin.Username,
+		Email:    userLogin.Email,
+		Role:     userLogin.Role,
 	}
 
 	return &data, nil
@@ -244,11 +238,10 @@ func (u *UserService) GetUserByUUID(ctx context.Context, uuid string) (*dto.User
 	}
 
 	data := dto.UserResponse{
-		UUID:        user.UUID,
-		Name:        user.Name,
-		Username:    user.Username,
-		PhoneNumber: user.PhoneNumber,
-		Email:       user.Email,
+		UUID:     user.UUID,
+		Name:     user.Name,
+		Username: user.Username,
+		Email:    user.Email,
 	}
 
 	return &data, nil

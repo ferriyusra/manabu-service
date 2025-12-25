@@ -30,13 +30,12 @@ func NewUserRepository(db *gorm.DB) IUserRepository {
 
 func (r *UserRepository) Register(ctx context.Context, req *dto.RegisterRequest) (*models.User, error) {
 	user := models.User{
-		UUID:        uuid.New(),
-		Name:        req.Name,
-		Username:    req.Username,
-		Password:    req.Password,
-		PhoneNumber: req.PhoneNumber,
-		Email:       req.Email,
-		RoleID:      req.RoleID,
+		UUID:     uuid.New(),
+		Name:     req.Name,
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+		RoleID:   req.RoleID,
 	}
 
 	err := r.db.WithContext(ctx).Create(&user).Error
@@ -49,11 +48,10 @@ func (r *UserRepository) Register(ctx context.Context, req *dto.RegisterRequest)
 
 func (r *UserRepository) Update(ctx context.Context, req *dto.UpdateRequest, uuid string) (*models.User, error) {
 	user := models.User{
-		Name:        req.Name,
-		Username:    req.Username,
-		Password:    *req.Password,
-		PhoneNumber: req.PhoneNumber,
-		Email:       req.Email,
+		Name:     req.Name,
+		Username: req.Username,
+		Password: *req.Password,
+		Email:    req.Email,
 	}
 
 	err := r.db.WithContext(ctx).
