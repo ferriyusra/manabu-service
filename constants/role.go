@@ -1,6 +1,6 @@
 package constants
 
 const (
-	Admin    = 1
-	User = 2
+	Admin = 1
+	User  = 2
 )

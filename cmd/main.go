@@ -66,6 +66,7 @@ var command = &cobra.Command{
 		err = db.AutoMigrate(
 			&models.Role{},
 			&models.User{},
+			&models.JlptLevel{},
 		)
 		if err != nil {
 			panic(err)

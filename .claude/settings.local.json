@@ -20,7 +20,10 @@
       "Bash(go get:*)",
       "Bash(go install:*)",
       "Bash(swag init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(go fmt:*)",
+      "Bash(go generate:*)"
     ],
     "deny": [],
     "ask": []

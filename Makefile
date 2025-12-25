@@ -9,10 +9,21 @@ watch-prepare: ## Install the tools required for the watch command
 	curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh
 
 watch: ## Run the service with hot reload
+	@echo "$(CYAN)Generating Swagger documentation...$(RESET)"
+	@go generate
+	@echo "$(GREEN)Swagger docs generated!$(RESET)"
 	bin/air
+
+run: ## Run the service (generate swagger + run)
+	@echo "$(CYAN)Generating Swagger documentation...$(RESET)"
+	@go generate
+	@echo "$(GREEN)Swagger docs generated!$(RESET)"
+	@echo "$(CYAN)Starting application...$(RESET)"
+	go run main.go serve
 
 ## Build:
 build: ## Build the service
+	go generate
 	go build -o manabu-service
 
 ## Swagger:

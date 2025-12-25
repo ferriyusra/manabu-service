@@ -9,6 +9,7 @@ var (
 	ErrUnauthorized        = errors.New("unauthorized")
 	ErrInvalidToken        = errors.New("invalid token")
 	ErrForbidden           = errors.New("forbidden")
+	ErrInvalidID           = errors.New("invalid id parameter")
 )
 
 var GeneralErrors = []error{
@@ -18,4 +19,5 @@ var GeneralErrors = []error{
 	ErrUnauthorized,
 	ErrInvalidToken,
 	ErrForbidden,
+	ErrInvalidID,
 }

@@ -115,14 +115,25 @@ Update `config.json` with your database credentials:
 # First time only - install air for hot reload
 make watch-prepare
 
-# Run with hot reload
+# Run with hot reload (auto-generates Swagger docs)
 make watch
+```
+
+### Development Mode (without hot reload)
+
+```bash
+# Run directly (auto-generates Swagger docs)
+make run
+
+# Or manually
+go generate  # Generates Swagger docs
+go run main.go serve
 ```
 
 ### Production Mode
 
 ```bash
-# Build the application
+# Build the application (auto-generates Swagger docs)
 make build
 
 # Run the binary
@@ -149,13 +160,24 @@ http://localhost:8001/swagger/index.html
 
 ### Generate Swagger Documentation
 
-After adding new endpoints or modifying existing ones:
+**Automatic Generation:**
+Swagger docs are automatically generated when you:
+- Run the app: `make run` or `make watch`
+- Build the app: `make build`
+- Execute: `go generate`
+
+**Manual Generation:**
+If you need to generate manually:
 
 ```bash
 make swagger
+# or
+go generate
 ```
 
 This will regenerate the Swagger documentation files in the `docs/` folder.
+
+**Note:** The `//go:generate` directive in `main.go` ensures docs are always up-to-date.
 
 ### API Endpoints
 
@@ -183,14 +205,19 @@ This will regenerate the Swagger documentation files in the `docs/` folder.
 # Install hot reload tool (first time only)
 make watch-prepare
 
-# Run with hot reload
+# Run with hot reload (auto-generates Swagger)
 make watch
 
-# Build the application
+# Run without hot reload (auto-generates Swagger)
+make run
+
+# Build the application (auto-generates Swagger)
 make build
 
-# Generate Swagger docs
+# Generate Swagger docs only (manual)
 make swagger
+# or
+go generate
 
 # Run with Docker
 make docker-compose

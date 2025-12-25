@@ -17,4 +17,5 @@ func NewSeederRegistry(db *gorm.DB) ISeederRegistry {
 func (s *Registry) Run() {
 	RunRoleSeeder(s.db)
 	RunUserSeeder(s.db)
+	RunJlptLevelSeeder(s.db)
 }
