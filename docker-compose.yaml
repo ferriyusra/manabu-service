@@ -1,0 +1,9 @@
+name: manabu-service-app
+services:
+  manabu-service:
+    container_name: manabu-service
+    image: usro/manabu-service:17
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
