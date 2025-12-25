@@ -16,7 +16,11 @@
       "Bash(dir:*)",
       "Bash(go mod tidy:*)",
       "Bash(go build:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(go get:*)",
+      "Bash(go install:*)",
+      "Bash(swag init:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

@@ -15,6 +15,12 @@ watch: ## Run the service with hot reload
 build: ## Build the service
 	go build -o manabu-service
 
+## Swagger:
+swagger: ## Generate Swagger documentation
+	swag init -g cmd/main.go -o docs
+	@echo "$(GREEN)Swagger documentation generated successfully!$(RESET)"
+	@echo "$(CYAN)Access Swagger UI at: http://localhost:8001/swagger/index.html$(RESET)"
+
 ## Docker:
 docker-compose: ## Start the service in docker
 	docker-compose up -d --build --force-recreate

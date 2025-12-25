@@ -27,6 +27,17 @@ func NewUserController(service services.IServiceRegistry) IUserController {
 	return &UserController{service: service}
 }
 
+// Login godoc
+// @Summary      User login
+// @Description  Authenticate user with username and password
+// @Tags         Authentication
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.LoginRequest true "Login credentials"
+// @Success      200 {object} response.Response{data=dto.LoginResponse}
+// @Failure      400 {object} response.Response
+// @Failure      422 {object} response.Response
+// @Router       /auth/login [post]
 func (u *UserController) Login(ctx *gin.Context) {
 	request := &dto.LoginRequest{}
 
@@ -73,6 +84,17 @@ func (u *UserController) Login(ctx *gin.Context) {
 	})
 }
 
+// Register godoc
+// @Summary      User registration
+// @Description  Register a new user account
+// @Tags         Authentication
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.RegisterRequest true "Registration details"
+// @Success      200 {object} response.Response{data=dto.RegisterResponse}
+// @Failure      400 {object} response.Response
+// @Failure      422 {object} response.Response
+// @Router       /auth/register [post]
 func (u *UserController) Register(ctx *gin.Context) {
 	request := &dto.RegisterRequest{}
 
@@ -118,6 +140,20 @@ func (u *UserController) Register(ctx *gin.Context) {
 	})
 }
 
+// Update godoc
+// @Summary      Update user profile
+// @Description  Update user information by UUID
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        uuid path string true "User UUID"
+// @Param        request body dto.UpdateRequest true "Update details"
+// @Success      200 {object} response.Response{data=dto.UserResponse}
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
+// @Failure      422 {object} response.Response
+// @Router       /auth/{uuid} [put]
 func (u *UserController) Update(ctx *gin.Context) {
 	request := &dto.UpdateRequest{}
 	uuid := ctx.Param("uuid")
@@ -164,6 +200,16 @@ func (u *UserController) Update(ctx *gin.Context) {
 	})
 }
 
+// GetUserLogin godoc
+// @Summary      Get logged in user
+// @Description  Get current authenticated user information
+// @Tags         Users
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200 {object} response.Response{data=dto.UserResponse}
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
+// @Router       /auth/user [get]
 func (u *UserController) GetUserLogin(ctx *gin.Context) {
 	user, err := u.service.GetUser().GetUserLogin(ctx.Request.Context())
 	if err != nil {
@@ -182,6 +228,17 @@ func (u *UserController) GetUserLogin(ctx *gin.Context) {
 	})
 }
 
+// GetUserByUUID godoc
+// @Summary      Get user by UUID
+// @Description  Get user information by UUID
+// @Tags         Users
+// @Produce      json
+// @Security     BearerAuth
+// @Param        uuid path string true "User UUID"
+// @Success      200 {object} response.Response{data=dto.UserResponse}
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
+// @Router       /auth/{uuid} [get]
 func (u *UserController) GetUserByUUID(ctx *gin.Context) {
 	user, err := u.service.GetUser().GetUserByUUID(ctx.Request.Context(), ctx.Param("uuid"))
 	if err != nil {

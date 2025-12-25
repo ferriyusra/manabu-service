@@ -14,7 +14,6 @@ type AppConfig struct {
 	Port                  int      `json:"port"`
 	AppName               string   `json:"appName"`
 	AppEnv                string   `json:"appEnv"`
-	SignatureKey          string   `json:"signatureKey"`
 	Database              Database `json:"database"`
 	RateLimiterMaxRequest float64  `json:"rateLimiterMaxRequest"`
 	RateLimiterTimeSecond int      `json:"rateLimiterTimeSecond"`

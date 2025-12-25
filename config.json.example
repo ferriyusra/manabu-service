@@ -2,7 +2,6 @@
   "port": 8001,
   "appName": "manabu-service",
   "appEnv": "local",
-  "signatureKey": "",
   "database": {
     "host": "localhost",
     "port": 5432,

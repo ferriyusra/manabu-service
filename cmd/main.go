@@ -15,12 +15,36 @@ import (
 	"net/http"
 	"time"
 
+	_ "manabu-service/docs"
+
 	"github.com/didip/tollbooth"
 	"github.com/didip/tollbooth/limiter"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title           Manabu API - Japanese Learning Application
+// @version         1.0
+// @description     API documentation for Manabu Japanese Learning Application
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.manabu.com/support
+// @contact.email  support@manabu.com
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8001
+// @BasePath  /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 
 var command = &cobra.Command{
 	Use:   "serve",
@@ -63,13 +87,13 @@ var command = &cobra.Command{
 		router.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, response.Response{
 				Status:  constants.Success,
-				Message: "Welcome to User Service",
+				Message: "Welcome to Manabu Service",
 			})
 		})
 		router.Use(func(c *gin.Context) {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH")
-			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, x-service-name, x-request-at, x-api-key")
+			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 			if c.Request.Method == "OPTIONS" {
 				c.AbortWithStatus(204)
 				return
@@ -83,6 +107,9 @@ var command = &cobra.Command{
 				DefaultExpirationTTL: time.Duration(config.Config.RateLimiterTimeSecond) * time.Second,
 			})
 		router.Use(middlewares.RateLimiter(lmt))
+
+		// Swagger endpoint
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		group := router.Group("/api/v1")
 		route := routes.NewRouteRegistry(controller, group)
