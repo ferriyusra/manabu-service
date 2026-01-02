@@ -37,10 +37,10 @@ func NewJlptLevelController(service services.IServiceRegistry) IJlptLevelControl
 // @Produce      json
 // @Security     BearerAuth
 // @Param        request body dto.CreateJlptLevelRequest true "JLPT Level details"
-// @Success      201 {object} response.JlptLevelResponse{data=dto.JlptLevelResponse}
-// @Failure      400 {object} response.JlptLevelResponse
-// @Failure      401 {object} response.JlptLevelResponse
-// @Failure      422 {object} response.JlptLevelResponse
+// @Success      201 {object} response.Response{data=dto.JlptLevelResponse}
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
+// @Failure      422 {object} response.Response
 // @Router       /jlpt-levels [post]
 func (c *JlptLevelController) Create(ctx *gin.Context) {
 	request := &dto.CreateJlptLevelRequest{}
@@ -92,8 +92,8 @@ func (c *JlptLevelController) Create(ctx *gin.Context) {
 // @Description  Retrieve all JLPT levels ordered by level
 // @Tags         JLPT Levels
 // @Produce      json
-// @Success      200 {object} response.JlptLevelResponse{data=[]dto.JlptLevelResponse}
-// @Failure      400 {object} response.JlptLevelResponse
+// @Success      200 {object} response.Response{data=[]dto.JlptLevelResponse}
+// @Failure      400 {object} response.Response
 // @Router       /jlpt-levels [get]
 func (c *JlptLevelController) GetAll(ctx *gin.Context) {
 	jlptLevels, err := c.service.GetJlptLevel().GetAll(ctx)
@@ -119,8 +119,8 @@ func (c *JlptLevelController) GetAll(ctx *gin.Context) {
 // @Tags         JLPT Levels
 // @Produce      json
 // @Param        id path int true "JLPT Level ID"
-// @Success      200 {object} response.JlptLevelResponse{data=dto.JlptLevelResponse}
-// @Failure      400 {object} response.JlptLevelResponse
+// @Success      200 {object} response.Response{data=dto.JlptLevelResponse}
+// @Failure      400 {object} response.Response
 // @Router       /jlpt-levels/{id} [get]
 func (c *JlptLevelController) GetByID(ctx *gin.Context) {
 	idParam := ctx.Param("id")
@@ -169,10 +169,10 @@ func (c *JlptLevelController) GetByID(ctx *gin.Context) {
 // @Security     BearerAuth
 // @Param        id path int true "JLPT Level ID"
 // @Param        request body dto.UpdateJlptLevelRequest true "Updated JLPT Level details"
-// @Success      200 {object} response.JlptLevelResponse{data=dto.JlptLevelResponse}
-// @Failure      400 {object} response.JlptLevelResponse
-// @Failure      401 {object} response.JlptLevelResponse
-// @Failure      422 {object} response.JlptLevelResponse
+// @Success      200 {object} response.Response{data=dto.JlptLevelResponse}
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
+// @Failure      422 {object} response.Response
 // @Router       /jlpt-levels/{id} [put]
 func (c *JlptLevelController) Update(ctx *gin.Context) {
 	request := &dto.UpdateJlptLevelRequest{}
@@ -245,9 +245,9 @@ func (c *JlptLevelController) Update(ctx *gin.Context) {
 // @Produce      json
 // @Security     BearerAuth
 // @Param        id path int true "JLPT Level ID"
-// @Success      200 {object} response.JlptLevelResponse
-// @Failure      400 {object} response.JlptLevelResponse
-// @Failure      401 {object} response.JlptLevelResponse
+// @Success      200 {object} response.Response
+// @Failure      400 {object} response.Response
+// @Failure      401 {object} response.Response
 // @Router       /jlpt-levels/{id} [delete]
 func (c *JlptLevelController) Delete(ctx *gin.Context) {
 	idParam := ctx.Param("id")

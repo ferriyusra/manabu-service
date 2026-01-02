@@ -23,7 +23,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(go fmt:*)",
-      "Bash(go generate:*)"
+      "Bash(go generate:*)",
+      "Bash(go vet:*)"
     ],
     "deny": [],
     "ask": []

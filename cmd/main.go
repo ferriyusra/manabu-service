@@ -67,6 +67,7 @@ var command = &cobra.Command{
 			&models.Role{},
 			&models.User{},
 			&models.JlptLevel{},
+			&models.Category{},
 		)
 		if err != nil {
 			panic(err)
