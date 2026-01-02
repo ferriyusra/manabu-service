@@ -2,6 +2,7 @@ package routes
 
 import (
 	"manabu-service/controllers"
+	categoryRoute "manabu-service/routes/category"
 	jlptLevelRoute "manabu-service/routes/jlpt_level"
 	routes "manabu-service/routes/user"
 
@@ -24,6 +25,7 @@ func NewRouteRegistry(controller controllers.IControllerRegistry, group *gin.Rou
 func (r *Registry) Serve() {
 	r.userRoute().Run()
 	r.jlptLevelRoute().Run()
+	r.categoryRoute().Run()
 }
 
 func (r *Registry) userRoute() routes.IUserRoute {
@@ -32,4 +34,8 @@ func (r *Registry) userRoute() routes.IUserRoute {
 
 func (r *Registry) jlptLevelRoute() jlptLevelRoute.IJlptLevelRoute {
 	return jlptLevelRoute.NewJlptLevelRoute(r.controller, r.group)
+}
+
+func (r *Registry) categoryRoute() categoryRoute.ICategoryRoute {
+	return categoryRoute.NewCategoryRoute(r.controller, r.group)
 }
