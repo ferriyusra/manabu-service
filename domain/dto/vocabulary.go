@@ -63,3 +63,16 @@ type VocabularyFilterRequest struct {
 	SortOrder    string `form:"sort_order" validate:"omitempty,oneof=asc desc" example:"asc"`
 	PaginationRequest
 }
+
+// Swagger response wrappers (without token field)
+type VocabularySwaggerResponse struct {
+	Status  string             `json:"status" example:"success"`
+	Message string             `json:"message" example:"Vocabulary created successfully"`
+	Data    VocabularyResponse `json:"data"`
+}
+
+type VocabularyListSwaggerResponse struct {
+	Status  string                  `json:"status" example:"success"`
+	Message string                  `json:"message" example:"Vocabularies retrieved successfully"`
+	Data    VocabularyListResponse  `json:"data"`
+}

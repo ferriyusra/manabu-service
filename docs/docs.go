@@ -1035,25 +1035,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/dto.VocabularyResponse"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/dto.PaginationResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/dto.VocabularyListSwaggerResponse"
                         }
                     },
                     "400": {
@@ -1108,19 +1090,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.VocabularyResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/dto.VocabularySwaggerResponse"
                         }
                     },
                     "400": {
@@ -1179,19 +1149,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.VocabularyResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/dto.VocabularySwaggerResponse"
                         }
                     },
                     "400": {
@@ -1253,19 +1211,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.VocabularyResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/dto.VocabularySwaggerResponse"
                         }
                     },
                     "400": {
@@ -1797,6 +1743,36 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.VocabularyListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.VocabularyResponse"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/dto.PaginationResponse"
+                }
+            }
+        },
+        "dto.VocabularyListSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.VocabularyListResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Vocabularies retrieved successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
         "dto.VocabularyResponse": {
             "type": "object",
             "properties": {
@@ -1857,6 +1833,22 @@ const docTemplate = `{
                 "word": {
                     "type": "string",
                     "example": "犬"
+                }
+            }
+        },
+        "dto.VocabularySwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.VocabularyResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Vocabulary created successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         },

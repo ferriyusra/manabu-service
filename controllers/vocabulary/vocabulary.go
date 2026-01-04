@@ -53,7 +53,7 @@ func (c *VocabularyController) getStatusCode(err error) int {
 // @Produce      json
 // @Security     BearerAuth
 // @Param        request body dto.CreateVocabularyRequest true "Vocabulary details"
-// @Success      201 {object} response.Response{data=dto.VocabularyResponse}
+// @Success      201 {object} dto.VocabularySwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      401 {object} response.Response
 // @Failure      409 {object} response.Response "Vocabulary already exists for this JLPT level"
@@ -119,7 +119,7 @@ func (c *VocabularyController) Create(ctx *gin.Context) {
 // @Param        search query string false "Search in word, reading, or meaning" example("dog")
 // @Param        sort_by query string false "Sort by field (word, difficulty, created_at)" default(created_at) example("word")
 // @Param        sort_order query string false "Sort order (asc, desc)" default(desc) example("asc")
-// @Success      200 {object} response.Response{data=[]dto.VocabularyResponse,pagination=dto.PaginationResponse}
+// @Success      200 {object} dto.VocabularyListSwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      422 {object} response.Response
 // @Failure      500 {object} response.Response
@@ -176,7 +176,7 @@ func (c *VocabularyController) GetAll(ctx *gin.Context) {
 // @Tags         Vocabularies
 // @Produce      json
 // @Param        id path int true "Vocabulary ID"
-// @Success      200 {object} response.Response{data=dto.VocabularyResponse}
+// @Success      200 {object} dto.VocabularySwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      404 {object} response.Response "Vocabulary not found"
 // @Failure      500 {object} response.Response
@@ -228,7 +228,7 @@ func (c *VocabularyController) GetByID(ctx *gin.Context) {
 // @Security     BearerAuth
 // @Param        id path int true "Vocabulary ID"
 // @Param        request body dto.UpdateVocabularyRequest true "Updated vocabulary details"
-// @Success      200 {object} response.Response{data=dto.VocabularyResponse}
+// @Success      200 {object} dto.VocabularySwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      401 {object} response.Response
 // @Failure      404 {object} response.Response "Vocabulary not found"

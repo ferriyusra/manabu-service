@@ -318,6 +318,26 @@ definitions:
       uuid:
         type: string
     type: object
+  dto.VocabularyListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.VocabularyResponse'
+        type: array
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+    type: object
+  dto.VocabularyListSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.VocabularyListResponse'
+      message:
+        example: Vocabularies retrieved successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   dto.VocabularyResponse:
     properties:
       audioUrl:
@@ -362,6 +382,17 @@ definitions:
         type: string
       word:
         example: 犬
+        type: string
+    type: object
+  dto.VocabularySwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.VocabularyResponse'
+      message:
+        example: Vocabulary created successfully
+        type: string
+      status:
+        example: success
         type: string
     type: object
   response.Response:
@@ -1006,16 +1037,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/dto.VocabularyResponse'
-                  type: array
-                pagination:
-                  $ref: '#/definitions/dto.PaginationResponse'
-              type: object
+            $ref: '#/definitions/dto.VocabularyListSwaggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1048,12 +1070,7 @@ paths:
         "201":
           description: Created
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.VocabularyResponse'
-              type: object
+            $ref: '#/definitions/dto.VocabularySwaggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1130,12 +1147,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.VocabularyResponse'
-              type: object
+            $ref: '#/definitions/dto.VocabularySwaggerResponse'
         "400":
           description: Bad Request
           schema:
@@ -1173,12 +1185,7 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.VocabularyResponse'
-              type: object
+            $ref: '#/definitions/dto.VocabularySwaggerResponse'
         "400":
           description: Bad Request
           schema:
