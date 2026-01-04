@@ -57,6 +57,62 @@ definitions:
     - levelOrder
     - name
     type: object
+  dto.CreateVocabularyRequest:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/inu.mp3
+        maxLength: 255
+        type: string
+      categoryId:
+        example: 1
+        minimum: 1
+        type: integer
+      difficulty:
+        example: 1
+        maximum: 5
+        minimum: 1
+        type: integer
+      exampleSentence:
+        example: 犬が好きです
+        type: string
+      exampleSentenceMeaning:
+        example: I like dogs
+        type: string
+      exampleSentenceReading:
+        example: いぬがすきです
+        type: string
+      imageUrl:
+        example: https://example.com/images/dog.jpg
+        maxLength: 255
+        type: string
+      jlptLevelId:
+        example: 5
+        minimum: 1
+        type: integer
+      meaning:
+        example: dog
+        maxLength: 500
+        minLength: 1
+        type: string
+      partOfSpeech:
+        example: noun
+        maxLength: 50
+        type: string
+      reading:
+        example: いぬ
+        maxLength: 255
+        type: string
+      word:
+        example: 犬
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - categoryId
+    - jlptLevelId
+    - meaning
+    - word
+    type: object
   dto.JlptLevelResponse:
     properties:
       code:
@@ -193,6 +249,62 @@ definitions:
     - name
     - username
     type: object
+  dto.UpdateVocabularyRequest:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/inu.mp3
+        maxLength: 255
+        type: string
+      categoryId:
+        example: 1
+        minimum: 1
+        type: integer
+      difficulty:
+        example: 1
+        maximum: 5
+        minimum: 1
+        type: integer
+      exampleSentence:
+        example: 犬が好きです
+        type: string
+      exampleSentenceMeaning:
+        example: I like dogs
+        type: string
+      exampleSentenceReading:
+        example: いぬがすきです
+        type: string
+      imageUrl:
+        example: https://example.com/images/dog.jpg
+        maxLength: 255
+        type: string
+      jlptLevelId:
+        example: 5
+        minimum: 1
+        type: integer
+      meaning:
+        example: dog
+        maxLength: 500
+        minLength: 1
+        type: string
+      partOfSpeech:
+        example: noun
+        maxLength: 50
+        type: string
+      reading:
+        example: いぬ
+        maxLength: 255
+        type: string
+      word:
+        example: 犬
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - categoryId
+    - jlptLevelId
+    - meaning
+    - word
+    type: object
   dto.UserResponse:
     properties:
       email:
@@ -204,6 +316,52 @@ definitions:
       username:
         type: string
       uuid:
+        type: string
+    type: object
+  dto.VocabularyResponse:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/inu.mp3
+        type: string
+      category:
+        $ref: '#/definitions/dto.CategoryResponse'
+      categoryId:
+        example: 1
+        type: integer
+      difficulty:
+        example: 1
+        type: integer
+      exampleSentence:
+        example: 犬が好きです
+        type: string
+      exampleSentenceMeaning:
+        example: I like dogs
+        type: string
+      exampleSentenceReading:
+        example: いぬがすきです
+        type: string
+      id:
+        example: 1
+        type: integer
+      imageUrl:
+        example: https://example.com/images/dog.jpg
+        type: string
+      jlptLevel:
+        $ref: '#/definitions/dto.JlptLevelResponse'
+      jlptLevelId:
+        example: 5
+        type: integer
+      meaning:
+        example: dog
+        type: string
+      partOfSpeech:
+        example: noun
+        type: string
+      reading:
+        example: いぬ
+        type: string
+      word:
+        example: 犬
         type: string
     type: object
   response.Response:
@@ -786,4 +944,268 @@ paths:
       summary: Update JLPT Level
       tags:
       - JLPT Levels
+  /vocabularies:
+    get:
+      description: Retrieve vocabularies with advanced filtering, search, sorting,
+        and pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by JLPT Level ID
+        example: 5
+        in: query
+        name: jlpt_level_id
+        type: integer
+      - description: Filter by Category ID
+        example: 1
+        in: query
+        name: category_id
+        type: integer
+      - description: Filter by part of speech
+        example: '"noun"'
+        in: query
+        name: part_of_speech
+        type: string
+      - description: Filter by difficulty (1-5)
+        in: query
+        maximum: 5
+        minimum: 1
+        name: difficulty
+        type: integer
+      - description: Search in word, reading, or meaning
+        example: '"dog"'
+        in: query
+        name: search
+        type: string
+      - default: created_at
+        description: Sort by field (word, difficulty, created_at)
+        example: '"word"'
+        in: query
+        name: sort_by
+        type: string
+      - default: desc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sort_order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.VocabularyResponse'
+                  type: array
+                pagination:
+                  $ref: '#/definitions/dto.PaginationResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Vocabularies
+      tags:
+      - Vocabularies
+    post:
+      consumes:
+      - application/json
+      description: Create a new vocabulary entry (admin only)
+      parameters:
+      - description: Vocabulary details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateVocabularyRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VocabularyResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Vocabulary already exists for this JLPT level
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid JLPT level ID or Category ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Vocabulary
+      tags:
+      - Vocabularies
+  /vocabularies/{id}:
+    delete:
+      description: Delete a vocabulary entry by ID (admin only)
+      parameters:
+      - description: Vocabulary ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Vocabulary not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Vocabulary
+      tags:
+      - Vocabularies
+    get:
+      description: Retrieve a specific vocabulary entry by ID
+      parameters:
+      - description: Vocabulary ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VocabularyResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Vocabulary not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Vocabulary by ID
+      tags:
+      - Vocabularies
+    put:
+      consumes:
+      - application/json
+      description: Update an existing vocabulary entry by ID (admin only)
+      parameters:
+      - description: Vocabulary ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated vocabulary details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateVocabularyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VocabularyResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Vocabulary not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Vocabulary already exists for this JLPT level
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid JLPT level ID or Category ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Vocabulary
+      tags:
+      - Vocabularies
 swagger: "2.0"

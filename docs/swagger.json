@@ -938,6 +938,419 @@
                     }
                 }
             }
+        },
+        "/vocabularies": {
+            "get": {
+                "description": "Retrieve vocabularies with advanced filtering, search, sorting, and pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Get all Vocabularies",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "Filter by JLPT Level ID",
+                        "name": "jlpt_level_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Filter by Category ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"noun\"",
+                        "description": "Filter by part of speech",
+                        "name": "part_of_speech",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 5,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Filter by difficulty (1-5)",
+                        "name": "difficulty",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"dog\"",
+                        "description": "Search in word, reading, or meaning",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "created_at",
+                        "example": "\"word\"",
+                        "description": "Sort by field (word, difficulty, created_at)",
+                        "name": "sort_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "desc",
+                        "example": "\"asc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sort_order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.VocabularyResponse"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/definitions/dto.PaginationResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new vocabulary entry (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Create Vocabulary",
+                "parameters": [
+                    {
+                        "description": "Vocabulary details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateVocabularyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.VocabularyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Vocabulary already exists for this JLPT level",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid JLPT level ID or Category ID",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/vocabularies/{id}": {
+            "get": {
+                "description": "Retrieve a specific vocabulary entry by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Get Vocabulary by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vocabulary ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.VocabularyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Vocabulary not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing vocabulary entry by ID (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Update Vocabulary",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vocabulary ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated vocabulary details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateVocabularyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.VocabularyResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Vocabulary not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Vocabulary already exists for this JLPT level",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid JLPT level ID or Category ID",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a vocabulary entry by ID (admin only)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Delete Vocabulary",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vocabulary ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Vocabulary not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1016,6 +1429,77 @@
                 "name": {
                     "type": "string",
                     "example": "JLPT N5"
+                }
+            }
+        },
+        "dto.CreateVocabularyRequest": {
+            "type": "object",
+            "required": [
+                "categoryId",
+                "jlptLevelId",
+                "meaning",
+                "word"
+            ],
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/audio/inu.mp3"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 1
+                },
+                "exampleSentence": {
+                    "type": "string",
+                    "example": "犬が好きです"
+                },
+                "exampleSentenceMeaning": {
+                    "type": "string",
+                    "example": "I like dogs"
+                },
+                "exampleSentenceReading": {
+                    "type": "string",
+                    "example": "いぬがすきです"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/images/dog.jpg"
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 5
+                },
+                "meaning": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "dog"
+                },
+                "partOfSpeech": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "noun"
+                },
+                "reading": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "いぬ"
+                },
+                "word": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "犬"
                 }
             }
         },
@@ -1211,6 +1695,77 @@
                 }
             }
         },
+        "dto.UpdateVocabularyRequest": {
+            "type": "object",
+            "required": [
+                "categoryId",
+                "jlptLevelId",
+                "meaning",
+                "word"
+            ],
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/audio/inu.mp3"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 1
+                },
+                "exampleSentence": {
+                    "type": "string",
+                    "example": "犬が好きです"
+                },
+                "exampleSentenceMeaning": {
+                    "type": "string",
+                    "example": "I like dogs"
+                },
+                "exampleSentenceReading": {
+                    "type": "string",
+                    "example": "いぬがすきです"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/images/dog.jpg"
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 5
+                },
+                "meaning": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "dog"
+                },
+                "partOfSpeech": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "noun"
+                },
+                "reading": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "いぬ"
+                },
+                "word": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "犬"
+                }
+            }
+        },
         "dto.UserResponse": {
             "type": "object",
             "properties": {
@@ -1228,6 +1783,69 @@
                 },
                 "uuid": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.VocabularyResponse": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "example": "https://example.com/audio/inu.mp3"
+                },
+                "category": {
+                    "$ref": "#/definitions/dto.CategoryResponse"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "exampleSentence": {
+                    "type": "string",
+                    "example": "犬が好きです"
+                },
+                "exampleSentenceMeaning": {
+                    "type": "string",
+                    "example": "I like dogs"
+                },
+                "exampleSentenceReading": {
+                    "type": "string",
+                    "example": "いぬがすきです"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://example.com/images/dog.jpg"
+                },
+                "jlptLevel": {
+                    "$ref": "#/definitions/dto.JlptLevelResponse"
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "meaning": {
+                    "type": "string",
+                    "example": "dog"
+                },
+                "partOfSpeech": {
+                    "type": "string",
+                    "example": "noun"
+                },
+                "reading": {
+                    "type": "string",
+                    "example": "いぬ"
+                },
+                "word": {
+                    "type": "string",
+                    "example": "犬"
                 }
             }
         },

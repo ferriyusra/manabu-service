@@ -4,6 +4,7 @@ import (
 	categoryRepo "manabu-service/repositories/category"
 	jlptLevelRepo "manabu-service/repositories/jlpt_level"
 	repositories "manabu-service/repositories/user"
+	vocabularyRepo "manabu-service/repositories/vocabulary"
 
 	"gorm.io/gorm"
 )
@@ -16,6 +17,7 @@ type IRepositoryRegistry interface {
 	GetUser() repositories.IUserRepository
 	GetJlptLevel() jlptLevelRepo.IJlptLevelRepository
 	GetCategory() categoryRepo.ICategoryRepository
+	GetVocabulary() vocabularyRepo.IVocabularyRepository
 }
 
 func NewRepositoryRegistry(db *gorm.DB) IRepositoryRegistry {
@@ -32,4 +34,8 @@ func (r *Registry) GetJlptLevel() jlptLevelRepo.IJlptLevelRepository {
 
 func (r *Registry) GetCategory() categoryRepo.ICategoryRepository {
 	return categoryRepo.NewCategoryRepository(r.db)
+}
+
+func (r *Registry) GetVocabulary() vocabularyRepo.IVocabularyRepository {
+	return vocabularyRepo.NewVocabularyRepository(r.db)
 }

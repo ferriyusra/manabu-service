@@ -5,6 +5,7 @@ import (
 	categoryService "manabu-service/services/category"
 	jlptLevelService "manabu-service/services/jlpt_level"
 	services "manabu-service/services/user"
+	vocabularyService "manabu-service/services/vocabulary"
 )
 
 type Registry struct {
@@ -15,6 +16,7 @@ type IServiceRegistry interface {
 	GetUser() services.IUserService
 	GetJlptLevel() jlptLevelService.IJlptLevelService
 	GetCategory() categoryService.ICategoryService
+	GetVocabulary() vocabularyService.IVocabularyService
 }
 
 func NewServiceRegistry(repository repositories.IRepositoryRegistry) IServiceRegistry {
@@ -31,4 +33,8 @@ func (r *Registry) GetJlptLevel() jlptLevelService.IJlptLevelService {
 
 func (r *Registry) GetCategory() categoryService.ICategoryService {
 	return categoryService.NewCategoryService(r.repository)
+}
+
+func (r *Registry) GetVocabulary() vocabularyService.IVocabularyService {
+	return vocabularyService.NewVocabularyService(r.repository)
 }
