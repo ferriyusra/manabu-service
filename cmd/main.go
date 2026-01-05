@@ -69,6 +69,7 @@ var command = &cobra.Command{
 			&models.JlptLevel{},
 			&models.Category{},
 			&models.Vocabulary{},
+			&models.Tag{},
 		)
 		if err != nil {
 			panic(err)

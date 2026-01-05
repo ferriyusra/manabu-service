@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   dto.CategoryResponse:
     properties:
@@ -55,6 +56,23 @@ definitions:
     - code
     - description
     - levelOrder
+    - name
+    type: object
+  dto.CreateTagRequest:
+    properties:
+      color:
+        example: '#FF5733'
+        type: string
+      description:
+        example: Tags for grammar-related vocabulary
+        maxLength: 255
+        type: string
+      name:
+        example: Grammar
+        maxLength: 50
+        minLength: 1
+        type: string
+    required:
     - name
     type: object
   dto.CreateVocabularyRequest:
@@ -189,6 +207,47 @@ definitions:
       user:
         $ref: '#/definitions/dto.UserResponse'
     type: object
+  dto.TagListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.TagResponse'
+        type: array
+      message:
+        example: Tags retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.TagResponse:
+    properties:
+      color:
+        example: '#FF5733'
+        type: string
+      description:
+        example: Tags for grammar-related vocabulary
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Grammar
+        type: string
+    type: object
+  dto.TagSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.TagResponse'
+      message:
+        example: Tag created successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   dto.UpdateCategoryRequest:
     properties:
       description:
@@ -248,6 +307,21 @@ definitions:
     - email
     - name
     - username
+    type: object
+  dto.UpdateTagRequest:
+    properties:
+      color:
+        example: '#FF5733'
+        type: string
+      description:
+        example: Tags for grammar-related vocabulary
+        maxLength: 255
+        type: string
+      name:
+        example: Grammar
+        maxLength: 50
+        minLength: 1
+        type: string
     type: object
   dto.UpdateVocabularyRequest:
     properties:
@@ -318,22 +392,17 @@ definitions:
       uuid:
         type: string
     type: object
-  dto.VocabularyListResponse:
+  dto.VocabularyListSwaggerResponse:
     properties:
       data:
         items:
           $ref: '#/definitions/dto.VocabularyResponse'
         type: array
-      pagination:
-        $ref: '#/definitions/dto.PaginationResponse'
-    type: object
-  dto.VocabularyListSwaggerResponse:
-    properties:
-      data:
-        $ref: '#/definitions/dto.VocabularyListResponse'
       message:
         example: Vocabularies retrieved successfully
         type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
       status:
         example: success
         type: string
@@ -404,8 +473,19 @@ definitions:
       token:
         type: string
     type: object
+host: localhost:8001
 info:
-  contact: {}
+  contact:
+    email: support@manabu.com
+    name: API Support
+    url: http://www.manabu.com/support
+  description: API documentation for Manabu Japanese Learning Application
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Manabu API - Japanese Learning Application
+  version: "1.0"
 paths:
   /auth/{uuid}:
     get:
@@ -975,6 +1055,244 @@ paths:
       summary: Update JLPT Level
       tags:
       - JLPT Levels
+  /tags:
+    get:
+      description: Retrieve all tags with optional search and pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Search in tag name
+        example: '"grammar"'
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TagListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Tags
+      tags:
+      - Tags
+    post:
+      consumes:
+      - application/json
+      description: Create a new tag (admin only)
+      parameters:
+      - description: Tag details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTagRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TagSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Tag with this name already exists
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid color format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Tag
+      tags:
+      - Tags
+  /tags/{id}:
+    delete:
+      description: Delete a tag by ID (admin only)
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Tag not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Tag
+      tags:
+      - Tags
+    get:
+      description: Retrieve a specific tag by ID
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TagSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Tag not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Tag by ID
+      tags:
+      - Tags
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tag by ID (admin only)
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated tag details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TagSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Tag not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Tag with this name already exists
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid color format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Tag
+      tags:
+      - Tags
+  /tags/search:
+    get:
+      description: Retrieve a tag by exact name match (case-insensitive)
+      parameters:
+      - description: Tag name
+        example: '"Grammar"'
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TagSwaggerResponse'
+        "400":
+          description: Name parameter is required
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Tag not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Search Tag by name
+      tags:
+      - Tags
   /vocabularies:
     get:
       description: Retrieve vocabularies with advanced filtering, search, sorting,
@@ -1215,4 +1533,10 @@ paths:
       summary: Update Vocabulary
       tags:
       - Vocabularies
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

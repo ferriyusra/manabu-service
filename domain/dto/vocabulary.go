@@ -66,13 +66,14 @@ type VocabularyFilterRequest struct {
 
 // Swagger response wrappers (without token field)
 type VocabularySwaggerResponse struct {
-	Status  string             `json:"status" example:"success"`
 	Message string             `json:"message" example:"Vocabulary created successfully"`
+	Status  string             `json:"status" example:"success"`
 	Data    VocabularyResponse `json:"data"`
 }
 
 type VocabularyListSwaggerResponse struct {
-	Status  string                  `json:"status" example:"success"`
-	Message string                  `json:"message" example:"Vocabularies retrieved successfully"`
-	Data    VocabularyListResponse  `json:"data"`
+	Message    string               `json:"message" example:"Vocabularies retrieved successfully"`
+	Pagination PaginationResponse   `json:"pagination"`
+	Status     string               `json:"status" example:"success"`
+	Data       []VocabularyResponse `json:"data"`
 }

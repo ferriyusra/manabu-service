@@ -9,8 +9,8 @@ import (
 )
 
 type Response struct {
-	Status  string      `json:"status"`
 	Message any         `json:"message"`
+	Status  string      `json:"status"`
 	Data    interface{} `json:"data"`
 	Token   *string     `json:"token,omitempty"`
 }

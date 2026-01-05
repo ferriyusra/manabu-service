@@ -153,10 +153,10 @@ func (c *CategoryController) GetAll(ctx *gin.Context) {
 
 	// Return response with data array and pagination at same level
 	ctx.JSON(http.StatusOK, gin.H{
-		"status":     "success",
 		"message":    http.StatusText(http.StatusOK),
-		"data":       categories.Data,
 		"pagination": categories.Pagination,
+		"status":     "success",
+		"data":       categories.Data,
 	})
 }
 
@@ -277,10 +277,10 @@ func (c *CategoryController) GetByJlptLevelID(ctx *gin.Context) {
 
 	// Return response with data array and pagination at same level
 	ctx.JSON(http.StatusOK, gin.H{
-		"status":     "success",
 		"message":    http.StatusText(http.StatusOK),
-		"data":       categories.Data,
 		"pagination": categories.Pagination,
+		"status":     "success",
+		"data":       categories.Data,
 	})
 }
 

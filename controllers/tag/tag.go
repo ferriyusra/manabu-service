@@ -13,31 +13,34 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type VocabularyController struct {
+type TagController struct {
 	service services.IServiceRegistry
 }
 
-type IVocabularyController interface {
+type ITagController interface {
 	Create(*gin.Context)
 	GetAll(*gin.Context)
 	GetByID(*gin.Context)
+	GetByName(*gin.Context)
 	Update(*gin.Context)
 	Delete(*gin.Context)
 }
 
-func NewVocabularyController(service services.IServiceRegistry) IVocabularyController {
-	return &VocabularyController{service: service}
+func NewTagController(service services.IServiceRegistry) ITagController {
+	return &TagController{service: service}
 }
 
 // getStatusCode maps errors to appropriate HTTP status codes
-func (c *VocabularyController) getStatusCode(err error) int {
+func (c *TagController) getStatusCode(err error) int {
 	switch err {
-	case errConstant.ErrVocabularyNotFound:
+	case errConstant.ErrTagNotFound:
 		return http.StatusNotFound
-	case errConstant.ErrVocabularyDuplicate:
+	case errConstant.ErrTagDuplicate:
 		return http.StatusConflict
-	case errConstant.ErrInvalidJlptLevelID, errConstant.ErrInvalidCategoryID, errConstant.ErrInvalidDifficulty, errConstant.ErrInvalidPartOfSpeech:
+	case errConstant.ErrInvalidColor:
 		return http.StatusUnprocessableEntity
+	case errConstant.ErrInvalidTagName:
+		return http.StatusBadRequest
 	case errConstant.ErrInvalidID:
 		return http.StatusBadRequest
 	default:
@@ -46,22 +49,22 @@ func (c *VocabularyController) getStatusCode(err error) int {
 }
 
 // Create godoc
-// @Summary      Create Vocabulary
-// @Description  Create a new vocabulary entry (admin only)
-// @Tags         Vocabularies
+// @Summary      Create Tag
+// @Description  Create a new tag (admin only)
+// @Tags         Tags
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        request body dto.CreateVocabularyRequest true "Vocabulary details"
-// @Success      201 {object} dto.VocabularySwaggerResponse
+// @Param        request body dto.CreateTagRequest true "Tag details"
+// @Success      201 {object} dto.TagSwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      401 {object} response.Response
-// @Failure      409 {object} response.Response "Vocabulary already exists for this JLPT level"
-// @Failure      422 {object} response.Response "Invalid JLPT level ID or Category ID"
+// @Failure      409 {object} response.Response "Tag with this name already exists"
+// @Failure      422 {object} response.Response "Invalid color format"
 // @Failure      500 {object} response.Response
-// @Router       /vocabularies [post]
-func (c *VocabularyController) Create(ctx *gin.Context) {
-	request := &dto.CreateVocabularyRequest{}
+// @Router       /tags [post]
+func (c *TagController) Create(ctx *gin.Context) {
+	request := &dto.CreateTagRequest{}
 
 	err := ctx.ShouldBindJSON(request)
 	if err != nil {
@@ -88,7 +91,7 @@ func (c *VocabularyController) Create(ctx *gin.Context) {
 		return
 	}
 
-	vocabulary, err := c.service.GetVocabulary().Create(ctx, request)
+	tag, err := c.service.GetTag().Create(ctx, request)
 	if err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: c.getStatusCode(err),
@@ -100,32 +103,26 @@ func (c *VocabularyController) Create(ctx *gin.Context) {
 
 	response.HttpResponse(response.ParamHTTPResp{
 		Code: http.StatusCreated,
-		Data: vocabulary,
+		Data: tag,
 		Gin:  ctx,
 	})
 }
 
 // GetAll godoc
-// @Summary      Get all Vocabularies
-// @Description  Retrieve vocabularies with advanced filtering, search, sorting, and pagination
-// @Tags         Vocabularies
+// @Summary      Get all Tags
+// @Description  Retrieve all tags with optional search and pagination
+// @Tags         Tags
 // @Produce      json
 // @Param        page query int false "Page number" default(1) minimum(1)
 // @Param        limit query int false "Items per page" default(10) minimum(1) maximum(100)
-// @Param        jlpt_level_id query int false "Filter by JLPT Level ID" example(5)
-// @Param        category_id query int false "Filter by Category ID" example(1)
-// @Param        part_of_speech query string false "Filter by part of speech" example("noun")
-// @Param        difficulty query int false "Filter by difficulty (1-5)" minimum(1) maximum(5)
-// @Param        search query string false "Search in word, reading, or meaning" example("dog")
-// @Param        sort_by query string false "Sort by field (word, difficulty, created_at)" default(created_at) example("word")
-// @Param        sort_order query string false "Sort order (asc, desc)" default(desc) example("asc")
-// @Success      200 {object} dto.VocabularyListSwaggerResponse
+// @Param        search query string false "Search in tag name" example("grammar")
+// @Success      200 {object} dto.TagListSwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      422 {object} response.Response
 // @Failure      500 {object} response.Response
-// @Router       /vocabularies [get]
-func (c *VocabularyController) GetAll(ctx *gin.Context) {
-	filter := &dto.VocabularyFilterRequest{}
+// @Router       /tags [get]
+func (c *TagController) GetAll(ctx *gin.Context) {
+	filter := &dto.TagFilterRequest{}
 
 	if err := ctx.ShouldBindQuery(filter); err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
@@ -151,7 +148,7 @@ func (c *VocabularyController) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	vocabularies, err := c.service.GetVocabulary().GetAll(ctx, filter)
+	tags, err := c.service.GetTag().GetAll(ctx, filter)
 	if err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: c.getStatusCode(err),
@@ -164,24 +161,24 @@ func (c *VocabularyController) GetAll(ctx *gin.Context) {
 	// Return response with data array and pagination at same level
 	ctx.JSON(http.StatusOK, gin.H{
 		"message":    http.StatusText(http.StatusOK),
-		"pagination": vocabularies.Pagination,
+		"pagination": tags.Pagination,
 		"status":     "success",
-		"data":       vocabularies.Data,
+		"data":       tags.Data,
 	})
 }
 
 // GetByID godoc
-// @Summary      Get Vocabulary by ID
-// @Description  Retrieve a specific vocabulary entry by ID
-// @Tags         Vocabularies
+// @Summary      Get Tag by ID
+// @Description  Retrieve a specific tag by ID
+// @Tags         Tags
 // @Produce      json
-// @Param        id path int true "Vocabulary ID"
-// @Success      200 {object} dto.VocabularySwaggerResponse
+// @Param        id path int true "Tag ID"
+// @Success      200 {object} dto.TagSwaggerResponse
 // @Failure      400 {object} response.Response
-// @Failure      404 {object} response.Response "Vocabulary not found"
+// @Failure      404 {object} response.Response "Tag not found"
 // @Failure      500 {object} response.Response
-// @Router       /vocabularies/{id} [get]
-func (c *VocabularyController) GetByID(ctx *gin.Context) {
+// @Router       /tags/{id} [get]
+func (c *TagController) GetByID(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	if idParam == "" {
 		response.HttpResponse(response.ParamHTTPResp{
@@ -202,7 +199,7 @@ func (c *VocabularyController) GetByID(ctx *gin.Context) {
 		return
 	}
 
-	vocabulary, err := c.service.GetVocabulary().GetByID(ctx, uint(id))
+	tag, err := c.service.GetTag().GetByID(ctx, uint(id))
 	if err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: c.getStatusCode(err),
@@ -214,30 +211,69 @@ func (c *VocabularyController) GetByID(ctx *gin.Context) {
 
 	response.HttpResponse(response.ParamHTTPResp{
 		Code: http.StatusOK,
-		Data: vocabulary,
+		Data: tag,
+		Gin:  ctx,
+	})
+}
+
+// GetByName godoc
+// @Summary      Search Tag by name
+// @Description  Retrieve a tag by exact name match (case-insensitive)
+// @Tags         Tags
+// @Produce      json
+// @Param        name query string true "Tag name" example("Grammar")
+// @Success      200 {object} dto.TagSwaggerResponse
+// @Failure      400 {object} response.Response "Name parameter is required"
+// @Failure      404 {object} response.Response "Tag not found"
+// @Failure      500 {object} response.Response
+// @Router       /tags/search [get]
+func (c *TagController) GetByName(ctx *gin.Context) {
+	name := ctx.Query("name")
+	if name == "" {
+		response.HttpResponse(response.ParamHTTPResp{
+			Code: http.StatusBadRequest,
+			Err:  errConstant.ErrInvalidID, // Reuse for missing parameter
+			Gin:  ctx,
+		})
+		return
+	}
+
+	tag, err := c.service.GetTag().GetByName(ctx, name)
+	if err != nil {
+		response.HttpResponse(response.ParamHTTPResp{
+			Code: c.getStatusCode(err),
+			Err:  err,
+			Gin:  ctx,
+		})
+		return
+	}
+
+	response.HttpResponse(response.ParamHTTPResp{
+		Code: http.StatusOK,
+		Data: tag,
 		Gin:  ctx,
 	})
 }
 
 // Update godoc
-// @Summary      Update Vocabulary
-// @Description  Update an existing vocabulary entry by ID (admin only)
-// @Tags         Vocabularies
+// @Summary      Update Tag
+// @Description  Update an existing tag by ID (admin only)
+// @Tags         Tags
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        id path int true "Vocabulary ID"
-// @Param        request body dto.UpdateVocabularyRequest true "Updated vocabulary details"
-// @Success      200 {object} dto.VocabularySwaggerResponse
+// @Param        id path int true "Tag ID"
+// @Param        request body dto.UpdateTagRequest true "Updated tag details"
+// @Success      200 {object} dto.TagSwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      401 {object} response.Response
-// @Failure      404 {object} response.Response "Vocabulary not found"
-// @Failure      409 {object} response.Response "Vocabulary already exists for this JLPT level"
-// @Failure      422 {object} response.Response "Invalid JLPT level ID or Category ID"
+// @Failure      404 {object} response.Response "Tag not found"
+// @Failure      409 {object} response.Response "Tag with this name already exists"
+// @Failure      422 {object} response.Response "Invalid color format"
 // @Failure      500 {object} response.Response
-// @Router       /vocabularies/{id} [put]
-func (c *VocabularyController) Update(ctx *gin.Context) {
-	request := &dto.UpdateVocabularyRequest{}
+// @Router       /tags/{id} [put]
+func (c *TagController) Update(ctx *gin.Context) {
+	request := &dto.UpdateTagRequest{}
 	idParam := ctx.Param("id")
 	if idParam == "" {
 		response.HttpResponse(response.ParamHTTPResp{
@@ -283,7 +319,7 @@ func (c *VocabularyController) Update(ctx *gin.Context) {
 		return
 	}
 
-	vocabulary, err := c.service.GetVocabulary().Update(ctx, request, uint(id))
+	tag, err := c.service.GetTag().Update(ctx, request, uint(id))
 	if err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: c.getStatusCode(err),
@@ -295,25 +331,25 @@ func (c *VocabularyController) Update(ctx *gin.Context) {
 
 	response.HttpResponse(response.ParamHTTPResp{
 		Code: http.StatusOK,
-		Data: vocabulary,
+		Data: tag,
 		Gin:  ctx,
 	})
 }
 
 // Delete godoc
-// @Summary      Delete Vocabulary
-// @Description  Delete a vocabulary entry by ID (admin only)
-// @Tags         Vocabularies
+// @Summary      Delete Tag
+// @Description  Delete a tag by ID (admin only)
+// @Tags         Tags
 // @Produce      json
 // @Security     BearerAuth
-// @Param        id path int true "Vocabulary ID"
+// @Param        id path int true "Tag ID"
 // @Success      200 {object} response.Response
 // @Failure      400 {object} response.Response
 // @Failure      401 {object} response.Response
-// @Failure      404 {object} response.Response "Vocabulary not found"
+// @Failure      404 {object} response.Response "Tag not found"
 // @Failure      500 {object} response.Response
-// @Router       /vocabularies/{id} [delete]
-func (c *VocabularyController) Delete(ctx *gin.Context) {
+// @Router       /tags/{id} [delete]
+func (c *TagController) Delete(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	if idParam == "" {
 		response.HttpResponse(response.ParamHTTPResp{
@@ -334,7 +370,7 @@ func (c *VocabularyController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	err = c.service.GetVocabulary().Delete(ctx, uint(id))
+	err = c.service.GetTag().Delete(ctx, uint(id))
 	if err != nil {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: c.getStatusCode(err),
@@ -344,7 +380,7 @@ func (c *VocabularyController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	successMessage := "Vocabulary deleted successfully"
+	successMessage := "Tag deleted successfully"
 	response.HttpResponse(response.ParamHTTPResp{
 		Code:    http.StatusOK,
 		Message: &successMessage,

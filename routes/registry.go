@@ -4,6 +4,7 @@ import (
 	"manabu-service/controllers"
 	categoryRoute "manabu-service/routes/category"
 	jlptLevelRoute "manabu-service/routes/jlpt_level"
+	tagRoute "manabu-service/routes/tag"
 	routes "manabu-service/routes/user"
 	vocabularyRoute "manabu-service/routes/vocabulary"
 
@@ -28,6 +29,7 @@ func (r *Registry) Serve() {
 	r.jlptLevelRoute().Run()
 	r.categoryRoute().Run()
 	r.vocabularyRoute().Run()
+	r.tagRoute().Run()
 }
 
 func (r *Registry) userRoute() routes.IUserRoute {
@@ -44,4 +46,8 @@ func (r *Registry) categoryRoute() categoryRoute.ICategoryRoute {
 
 func (r *Registry) vocabularyRoute() vocabularyRoute.IVocabularyRoute {
 	return vocabularyRoute.NewVocabularyRoute(r.controller, r.group)
+}
+
+func (r *Registry) tagRoute() tagRoute.ITagRoute {
+	return tagRoute.NewTagRoute(r.controller, r.group)
 }
