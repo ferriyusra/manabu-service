@@ -1,0 +1,33 @@
+with-expecter: true
+dir: "mocks/{{.InterfaceDirRelative}}"
+mockname: "Mock{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "mock_{{.InterfaceNameSnake}}.go"
+packages:
+  # Repository interfaces
+  manabu-service/repositories/user:
+    interfaces:
+      IUserRepository:
+        config:
+          with-expecter: true
+
+  # Repository registry
+  manabu-service/repositories:
+    interfaces:
+      IRepositoryRegistry:
+        config:
+          with-expecter: true
+
+  # Service interfaces
+  manabu-service/services/user:
+    interfaces:
+      IUserService:
+        config:
+          with-expecter: true
+
+  # Service registry
+  manabu-service/services:
+    interfaces:
+      IServiceRegistry:
+        config:
+          with-expecter: true

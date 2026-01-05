@@ -53,3 +53,50 @@ docker-push: ## Build the Docker image with a specified tag
 	fi
 	docker push sikoding20/manabu-service:$(tag)
 	@echo "$(GREEN)Docker image built with tag '$(tag)'$(RESET)"
+
+## Testing:
+test: ## Run all tests
+	@echo "$(CYAN)Running all tests...$(RESET)"
+	go test ./... -v
+	@echo "$(GREEN)All tests passed!$(RESET)"
+
+test-coverage: ## Run tests with coverage report
+	@echo "$(CYAN)Running tests with coverage...$(RESET)"
+	go test ./controllers/user/... ./services/user/... ./repositories/user/... -coverprofile=coverage.out
+	@echo "$(GREEN)Coverage report generated!$(RESET)"
+	@echo "$(CYAN)Coverage summary:$(RESET)"
+	go tool cover -func=coverage.out
+	@echo "$(YELLOW)To view HTML report: make test-coverage-html$(RESET)"
+
+test-coverage-html: ## Generate HTML coverage report
+	@echo "$(CYAN)Generating HTML coverage report...$(RESET)"
+	go test ./controllers/user/... ./services/user/... ./repositories/user/... -coverprofile=coverage.out
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "$(GREEN)HTML coverage report generated: coverage.html$(RESET)"
+
+test-user: ## Run User API tests only
+	@echo "$(CYAN)Running User API tests...$(RESET)"
+	go test ./controllers/user/... ./services/user/... ./repositories/user/... -v -cover
+
+test-controller: ## Run controller tests only
+	@echo "$(CYAN)Running controller tests...$(RESET)"
+	go test ./controllers/... -v -cover
+
+test-service: ## Run service tests only
+	@echo "$(CYAN)Running service tests...$(RESET)"
+	go test ./services/... -v -cover
+
+test-repository: ## Run repository tests only
+	@echo "$(CYAN)Running repository tests...$(RESET)"
+	go test ./repositories/... -v -cover
+
+mock-generate: ## Generate mocks using mockery
+	@echo "$(CYAN)Generating mocks...$(RESET)"
+	mockery
+	@echo "$(GREEN)Mocks generated successfully!$(RESET)"
+
+mock-install: ## Install mockery tool
+	@echo "$(CYAN)Installing mockery...$(RESET)"
+	go install github.com/vektra/mockery/v2@latest
+	@echo "$(GREEN)Mockery installed successfully!$(RESET)"
+	@echo "$(YELLOW)Run 'make mock-generate' to generate mocks$(RESET)"

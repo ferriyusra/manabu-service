@@ -24,7 +24,9 @@
       "Bash(git commit:*)",
       "Bash(go fmt:*)",
       "Bash(go generate:*)",
-      "Bash(go vet:*)"
+      "Bash(go vet:*)",
+      "Bash(go test:*)",
+      "Bash(go tool cover:*)"
     ],
     "deny": [],
     "ask": []
