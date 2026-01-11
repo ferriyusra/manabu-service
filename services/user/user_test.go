@@ -21,10 +21,10 @@ import (
 
 type UserServiceTestSuite struct {
 	suite.Suite
-	service           IUserService
-	mockRepoRegistry  *mockRepo.MockIRepositoryRegistry
-	mockUserRepo      *mockUserRepo.MockIUserRepository
-	ctx               context.Context
+	service          IUserService
+	mockRepoRegistry *mockRepo.MockIRepositoryRegistry
+	mockUserRepo     *mockUserRepo.MockIUserRepository
+	ctx              context.Context
 }
 
 func TestUserServiceTestSuite(t *testing.T) {

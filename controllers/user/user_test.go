@@ -22,10 +22,10 @@ import (
 
 type UserControllerTestSuite struct {
 	suite.Suite
-	controller        IUserController
-	mockServiceReg    *mockService.MockIServiceRegistry
-	mockUserService   *mockUserService.MockIUserService
-	router            *gin.Engine
+	controller      IUserController
+	mockServiceReg  *mockService.MockIServiceRegistry
+	mockUserService *mockUserService.MockIUserService
+	router          *gin.Engine
 }
 
 func TestUserControllerTestSuite(t *testing.T) {

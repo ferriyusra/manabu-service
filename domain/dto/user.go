@@ -8,6 +8,7 @@ type LoginRequest struct {
 }
 
 type UserResponse struct {
+	ID       uint      `json:"-"` // Internal use only, not exposed in JSON
 	UUID     uuid.UUID `json:"uuid"`
 	Name     string    `json:"name"`
 	Username string    `json:"username"`

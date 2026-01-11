@@ -6,6 +6,7 @@ import (
 	jlptLevelService "manabu-service/services/jlpt_level"
 	tagService "manabu-service/services/tag"
 	services "manabu-service/services/user"
+	userVocabStatusService "manabu-service/services/user_vocabulary_status"
 	vocabularyService "manabu-service/services/vocabulary"
 )
 
@@ -19,6 +20,7 @@ type IServiceRegistry interface {
 	GetCategory() categoryService.ICategoryService
 	GetVocabulary() vocabularyService.IVocabularyService
 	GetTag() tagService.ITagService
+	GetUserVocabularyStatus() userVocabStatusService.IUserVocabularyStatusService
 }
 
 func NewServiceRegistry(repository repositories.IRepositoryRegistry) IServiceRegistry {
@@ -43,4 +45,8 @@ func (r *Registry) GetVocabulary() vocabularyService.IVocabularyService {
 
 func (r *Registry) GetTag() tagService.ITagService {
 	return tagService.NewTagService(r.repository)
+}
+
+func (r *Registry) GetUserVocabularyStatus() userVocabStatusService.IUserVocabularyStatusService {
+	return userVocabStatusService.NewUserVocabularyStatusService(r.repository)
 }

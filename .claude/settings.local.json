@@ -26,7 +26,11 @@
       "Bash(go generate:*)",
       "Bash(go vet:*)",
       "Bash(go test:*)",
-      "Bash(go tool cover:*)"
+      "Bash(go tool cover:*)",
+      "Bash(go run:*)",
+      "Bash(timeout 10 ./manabu-service.exe serve:*)",
+      "Bash(./manabu-service.exe serve:*)",
+      "Bash(.\\\\manabu-service.exe serve:*)"
     ],
     "deny": [],
     "ask": []

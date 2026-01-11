@@ -49,6 +49,7 @@ func (u *UserService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 
 	expirationTime := time.Now().Add(time.Duration(config.Config.JwtExpirationTime) * time.Minute).Unix()
 	data := &dto.UserResponse{
+		ID:       user.ID,
 		UUID:     user.UUID,
 		Name:     user.Name,
 		Username: user.Username,
@@ -134,6 +135,7 @@ func (u *UserService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 
 	response := &dto.RegisterResponse{
 		User: dto.UserResponse{
+			ID:       user.ID,
 			UUID:     user.UUID,
 			Name:     user.Name,
 			Username: user.Username,

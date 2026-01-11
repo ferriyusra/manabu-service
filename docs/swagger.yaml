@@ -75,6 +75,15 @@ definitions:
     required:
     - name
     type: object
+  dto.CreateUserVocabStatusRequest:
+    properties:
+      vocabularyId:
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - vocabularyId
+    type: object
   dto.CreateVocabularyRequest:
     properties:
       audioUrl:
@@ -206,6 +215,25 @@ definitions:
     properties:
       user:
         $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.ReviewUserVocabStatusRequest:
+    properties:
+      isCorrect:
+        example: true
+        type: boolean
+    required:
+    - isCorrect
+    type: object
+  dto.ReviewUserVocabStatusSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.UserVocabStatusResponse'
+      message:
+        example: OK
+        type: string
+      status:
+        example: success
+        type: string
     type: object
   dto.TagListSwaggerResponse:
     properties:
@@ -390,6 +418,74 @@ definitions:
       username:
         type: string
       uuid:
+        type: string
+    type: object
+  dto.UserVocabStatusDueSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.UserVocabStatusResponse'
+        type: array
+      message:
+        example: OK
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  dto.UserVocabStatusListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.UserVocabStatusResponse'
+        type: array
+      message:
+        example: OK
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.UserVocabStatusResponse:
+    properties:
+      createdAt:
+        example: "2024-01-08T10:00:00Z"
+        type: string
+      id:
+        example: 1
+        type: integer
+      lastReviewedAt:
+        example: "2024-01-08T10:00:00Z"
+        type: string
+      repetitions:
+        example: 0
+        type: integer
+      status:
+        example: learning
+        type: string
+      updatedAt:
+        example: "2024-01-08T10:00:00Z"
+        type: string
+      userId:
+        example: "1"
+        type: string
+      vocabulary:
+        $ref: '#/definitions/dto.VocabularyResponse'
+      vocabularyId:
+        example: 1
+        type: integer
+    type: object
+  dto.UserVocabStatusSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.UserVocabStatusResponse'
+      message:
+        example: OK
+        type: string
+      status:
+        example: success
         type: string
     type: object
   dto.VocabularyListSwaggerResponse:
@@ -1293,6 +1389,242 @@ paths:
       summary: Search Tag by name
       tags:
       - Tags
+  /user-vocabulary-status:
+    get:
+      description: Retrieve all vocabulary that the authenticated user is learning
+        with pagination and filtering
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - default: next_review_date
+        description: Sort field
+        enum:
+        - id
+        - created_at
+        - next_review_date
+        - status
+        in: query
+        name: sort
+        type: string
+      - default: asc
+        description: Sort order
+        enum:
+        - asc
+        - desc
+        in: query
+        name: order
+        type: string
+      - description: Filter by status
+        enum:
+        - learning
+        - completed
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserVocabStatusListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get all user's vocabulary learning statuses
+      tags:
+      - User Vocabulary Status
+    post:
+      consumes:
+      - application/json
+      description: Create a new user vocabulary status to start learning a vocabulary
+        word with simple progress tracking
+      parameters:
+      - description: Vocabulary ID to start learning
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserVocabStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserVocabStatusSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Vocabulary already being learned by user
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid vocabulary ID or vocabulary not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Start learning a vocabulary
+      tags:
+      - User Vocabulary Status
+  /user-vocabulary-status/{id}:
+    get:
+      description: Retrieve a specific user vocabulary status by ID including progress
+        tracking data
+      parameters:
+      - description: User Vocabulary Status ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserVocabStatusSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden - status belongs to another user
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User vocabulary status not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get vocabulary learning status
+      tags:
+      - User Vocabulary Status
+  /user-vocabulary-status/{vocabulary_id}/review:
+    post:
+      consumes:
+      - application/json
+      description: Submit review result with simple progress tracking. If correct,
+        increment repetitions (5 correct = completed). If incorrect, reset to 0. User
+        controls when to review.
+      parameters:
+      - description: Vocabulary ID
+        in: path
+        name: vocabulary_id
+        required: true
+        type: integer
+      - description: 'Review result (isCorrect: true/false)'
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReviewUserVocabStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReviewUserVocabStatusSwaggerResponse'
+        "400":
+          description: Invalid vocabulary ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden - status belongs to another user
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User vocabulary status not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Validation errors
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Review a vocabulary
+      tags:
+      - User Vocabulary Status
+  /user-vocabulary-status/due:
+    get:
+      description: 'Retrieve all vocabulary that need to be reviewed (based on next_review_date).
+        Note: In simple system, user decides when to review.'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserVocabStatusDueSwaggerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get vocabularies due for review
+      tags:
+      - User Vocabulary Status
   /vocabularies:
     get:
       description: Retrieve vocabularies with advanced filtering, search, sorting,

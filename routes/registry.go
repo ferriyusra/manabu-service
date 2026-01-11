@@ -6,6 +6,7 @@ import (
 	jlptLevelRoute "manabu-service/routes/jlpt_level"
 	tagRoute "manabu-service/routes/tag"
 	routes "manabu-service/routes/user"
+	userVocabStatusRoute "manabu-service/routes/user_vocabulary_status"
 	vocabularyRoute "manabu-service/routes/vocabulary"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ func (r *Registry) Serve() {
 	r.categoryRoute().Run()
 	r.vocabularyRoute().Run()
 	r.tagRoute().Run()
+	r.userVocabularyStatusRoute().Run()
 }
 
 func (r *Registry) userRoute() routes.IUserRoute {
@@ -50,4 +52,8 @@ func (r *Registry) vocabularyRoute() vocabularyRoute.IVocabularyRoute {
 
 func (r *Registry) tagRoute() tagRoute.ITagRoute {
 	return tagRoute.NewTagRoute(r.controller, r.group)
+}
+
+func (r *Registry) userVocabularyStatusRoute() userVocabStatusRoute.IUserVocabularyStatusRoute {
+	return userVocabStatusRoute.NewUserVocabularyStatusRoute(r.controller, r.group)
 }

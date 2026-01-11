@@ -13,6 +13,8 @@ import (
 
 	user "manabu-service/repositories/user"
 
+	user_vocabulary_status "manabu-service/repositories/user_vocabulary_status"
+
 	vocabulary "manabu-service/repositories/vocabulary"
 )
 
@@ -213,6 +215,53 @@ func (_c *MockIRepositoryRegistry_GetUser_Call) Return(_a0 user.IUserRepository)
 }
 
 func (_c *MockIRepositoryRegistry_GetUser_Call) RunAndReturn(run func() user.IUserRepository) *MockIRepositoryRegistry_GetUser_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetUserVocabularyStatus provides a mock function with no fields
+func (_m *MockIRepositoryRegistry) GetUserVocabularyStatus() user_vocabulary_status.IUserVocabularyStatusRepository {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserVocabularyStatus")
+	}
+
+	var r0 user_vocabulary_status.IUserVocabularyStatusRepository
+	if rf, ok := ret.Get(0).(func() user_vocabulary_status.IUserVocabularyStatusRepository); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(user_vocabulary_status.IUserVocabularyStatusRepository)
+		}
+	}
+
+	return r0
+}
+
+// MockIRepositoryRegistry_GetUserVocabularyStatus_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserVocabularyStatus'
+type MockIRepositoryRegistry_GetUserVocabularyStatus_Call struct {
+	*mock.Call
+}
+
+// GetUserVocabularyStatus is a helper method to define mock.On call
+func (_e *MockIRepositoryRegistry_Expecter) GetUserVocabularyStatus() *MockIRepositoryRegistry_GetUserVocabularyStatus_Call {
+	return &MockIRepositoryRegistry_GetUserVocabularyStatus_Call{Call: _e.mock.On("GetUserVocabularyStatus")}
+}
+
+func (_c *MockIRepositoryRegistry_GetUserVocabularyStatus_Call) Run(run func()) *MockIRepositoryRegistry_GetUserVocabularyStatus_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockIRepositoryRegistry_GetUserVocabularyStatus_Call) Return(_a0 user_vocabulary_status.IUserVocabularyStatusRepository) *MockIRepositoryRegistry_GetUserVocabularyStatus_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockIRepositoryRegistry_GetUserVocabularyStatus_Call) RunAndReturn(run func() user_vocabulary_status.IUserVocabularyStatusRepository) *MockIRepositoryRegistry_GetUserVocabularyStatus_Call {
 	_c.Call.Return(run)
 	return _c
 }

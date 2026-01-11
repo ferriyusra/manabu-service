@@ -13,6 +13,8 @@ import (
 
 	user "manabu-service/services/user"
 
+	user_vocabulary_status "manabu-service/services/user_vocabulary_status"
+
 	vocabulary "manabu-service/services/vocabulary"
 )
 
@@ -213,6 +215,53 @@ func (_c *MockIServiceRegistry_GetUser_Call) Return(_a0 user.IUserService) *Mock
 }
 
 func (_c *MockIServiceRegistry_GetUser_Call) RunAndReturn(run func() user.IUserService) *MockIServiceRegistry_GetUser_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetUserVocabularyStatus provides a mock function with no fields
+func (_m *MockIServiceRegistry) GetUserVocabularyStatus() user_vocabulary_status.IUserVocabularyStatusService {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserVocabularyStatus")
+	}
+
+	var r0 user_vocabulary_status.IUserVocabularyStatusService
+	if rf, ok := ret.Get(0).(func() user_vocabulary_status.IUserVocabularyStatusService); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(user_vocabulary_status.IUserVocabularyStatusService)
+		}
+	}
+
+	return r0
+}
+
+// MockIServiceRegistry_GetUserVocabularyStatus_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserVocabularyStatus'
+type MockIServiceRegistry_GetUserVocabularyStatus_Call struct {
+	*mock.Call
+}
+
+// GetUserVocabularyStatus is a helper method to define mock.On call
+func (_e *MockIServiceRegistry_Expecter) GetUserVocabularyStatus() *MockIServiceRegistry_GetUserVocabularyStatus_Call {
+	return &MockIServiceRegistry_GetUserVocabularyStatus_Call{Call: _e.mock.On("GetUserVocabularyStatus")}
+}
+
+func (_c *MockIServiceRegistry_GetUserVocabularyStatus_Call) Run(run func()) *MockIServiceRegistry_GetUserVocabularyStatus_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockIServiceRegistry_GetUserVocabularyStatus_Call) Return(_a0 user_vocabulary_status.IUserVocabularyStatusService) *MockIServiceRegistry_GetUserVocabularyStatus_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockIServiceRegistry_GetUserVocabularyStatus_Call) RunAndReturn(run func() user_vocabulary_status.IUserVocabularyStatusService) *MockIServiceRegistry_GetUserVocabularyStatus_Call {
 	_c.Call.Return(run)
 	return _c
 }
