@@ -9,6 +9,7 @@ func ErrMapping(err error) bool {
 	allErrors = append(allErrors, VocabularyErrors[:]...)
 	allErrors = append(allErrors, TagErrors[:]...)
 	allErrors = append(allErrors, UserVocabularyStatusErrors[:]...)
+	allErrors = append(allErrors, CourseErrors[:]...)
 
 	for _, item := range allErrors {
 		if err.Error() == item.Error() {

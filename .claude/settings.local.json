@@ -30,7 +30,8 @@
       "Bash(go run:*)",
       "Bash(timeout 10 ./manabu-service.exe serve:*)",
       "Bash(./manabu-service.exe serve:*)",
-      "Bash(.\\\\manabu-service.exe serve:*)"
+      "Bash(.\\\\manabu-service.exe serve:*)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []

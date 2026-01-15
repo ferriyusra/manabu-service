@@ -54,13 +54,13 @@ type VocabularyListResponse struct {
 }
 
 type VocabularyFilterRequest struct {
-	JlptLevelID  uint   `form:"jlpt_level_id" validate:"omitempty,min=1" example:"5"`
-	CategoryID   uint   `form:"category_id" validate:"omitempty,min=1" example:"1"`
-	PartOfSpeech string `form:"part_of_speech" validate:"omitempty,max=50" example:"noun"`
+	JlptLevelID  uint   `form:"jlptLevelId" validate:"omitempty,min=1" example:"5"`
+	CategoryID   uint   `form:"categoryId" validate:"omitempty,min=1" example:"1"`
+	PartOfSpeech string `form:"partOfSpeech" validate:"omitempty,max=50" example:"noun"`
 	Difficulty   int    `form:"difficulty" validate:"omitempty,min=1,max=5" example:"1"`
 	Search       string `form:"search" validate:"omitempty,max=100" example:"dog"`
-	SortBy       string `form:"sort_by" validate:"omitempty,oneof=word difficulty created_at" example:"word"`
-	SortOrder    string `form:"sort_order" validate:"omitempty,oneof=asc desc" example:"asc"`
+	SortBy       string `form:"sortBy" validate:"omitempty,oneof=word difficulty created_at" example:"word"`
+	SortOrder    string `form:"sortOrder" validate:"omitempty,oneof=asc desc" example:"asc"`
 	PaginationRequest
 }
 

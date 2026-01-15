@@ -2,6 +2,7 @@ package repositories
 
 import (
 	categoryRepo "manabu-service/repositories/category"
+	courseRepo "manabu-service/repositories/course"
 	jlptLevelRepo "manabu-service/repositories/jlpt_level"
 	tagRepo "manabu-service/repositories/tag"
 	repositories "manabu-service/repositories/user"
@@ -22,6 +23,7 @@ type IRepositoryRegistry interface {
 	GetVocabulary() vocabularyRepo.IVocabularyRepository
 	GetTag() tagRepo.ITagRepository
 	GetUserVocabularyStatus() userVocabStatusRepo.IUserVocabularyStatusRepository
+	GetCourse() courseRepo.ICourseRepository
 }
 
 func NewRepositoryRegistry(db *gorm.DB) IRepositoryRegistry {
@@ -50,4 +52,8 @@ func (r *Registry) GetTag() tagRepo.ITagRepository {
 
 func (r *Registry) GetUserVocabularyStatus() userVocabStatusRepo.IUserVocabularyStatusRepository {
 	return userVocabStatusRepo.NewUserVocabularyStatusRepository(r.db)
+}
+
+func (r *Registry) GetCourse() courseRepo.ICourseRepository {
+	return courseRepo.NewCourseRepository(r.db)
 }

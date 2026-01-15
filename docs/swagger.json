@@ -445,7 +445,7 @@
                 }
             }
         },
-        "/categories/jlpt/{jlpt_level_id}": {
+        "/categories/jlpt/{jlptLevelId}": {
             "get": {
                 "description": "Retrieve all categories for a specific JLPT level with pagination",
                 "produces": [
@@ -459,7 +459,7 @@
                     {
                         "type": "integer",
                         "description": "JLPT Level ID",
-                        "name": "jlpt_level_id",
+                        "name": "jlptLevelId",
                         "in": "path",
                         "required": true
                     },
@@ -673,6 +673,569 @@
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses": {
+            "get": {
+                "description": "Retrieve courses with advanced filtering, search, sorting, and pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Get all Courses",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "Filter by JLPT Level ID",
+                        "name": "jlptLevelId",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 5,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Filter by difficulty (1-5)",
+                        "name": "difficulty",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": true,
+                        "description": "Filter by publication status",
+                        "name": "isPublished",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"japanese\"",
+                        "description": "Search in title or description",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "created_at",
+                        "example": "\"title\"",
+                        "description": "Sort by field (title, difficulty, created_at)",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "desc",
+                        "example": "\"asc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseListSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new course entry (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Create Course",
+                "parameters": [
+                    {
+                        "description": "Course details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Course with this title already exists for this JLPT level",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid JLPT level ID or difficulty",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/published": {
+            "get": {
+                "description": "Retrieve only published courses with filtering, search, sorting, and pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Get Published Courses",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "Filter by JLPT Level ID",
+                        "name": "jlptLevelId",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 5,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Filter by difficulty (1-5)",
+                        "name": "difficulty",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"japanese\"",
+                        "description": "Search in title or description",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "created_at",
+                        "example": "\"title\"",
+                        "description": "Sort by field (title, difficulty, created_at)",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "desc",
+                        "example": "\"asc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseListSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}": {
+            "get": {
+                "description": "Retrieve a specific course entry by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Get Course by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing course entry by ID (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Update Course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated course details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Course with this title already exists for this JLPT level",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid JLPT level ID or difficulty",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a course entry by ID (admin only)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Delete Course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}/publish": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Publish a course by ID (admin only) - sets is_published=true and published_at=now",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Publish Course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Course is already published",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{id}/unpublish": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Unpublish a course by ID (admin only) - sets is_published=false",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Unpublish Course",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Course ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CourseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Course is not published",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Course not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1699,21 +2262,21 @@
                         "type": "integer",
                         "example": 5,
                         "description": "Filter by JLPT Level ID",
-                        "name": "jlpt_level_id",
+                        "name": "jlptLevelId",
                         "in": "query"
                     },
                     {
                         "type": "integer",
                         "example": 1,
                         "description": "Filter by Category ID",
-                        "name": "category_id",
+                        "name": "categoryId",
                         "in": "query"
                     },
                     {
                         "type": "string",
                         "example": "\"noun\"",
                         "description": "Filter by part of speech",
-                        "name": "part_of_speech",
+                        "name": "partOfSpeech",
                         "in": "query"
                     },
                     {
@@ -1736,7 +2299,7 @@
                         "default": "created_at",
                         "example": "\"word\"",
                         "description": "Sort by field (word, difficulty, created_at)",
-                        "name": "sort_by",
+                        "name": "sortBy",
                         "in": "query"
                     },
                     {
@@ -1744,7 +2307,7 @@
                         "default": "desc",
                         "example": "\"asc\"",
                         "description": "Sort order (asc, desc)",
-                        "name": "sort_order",
+                        "name": "sortOrder",
                         "in": "query"
                     }
                 ],
@@ -2052,6 +2615,88 @@
                 }
             }
         },
+        "dto.CourseListSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.CourseResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Courses retrieved successfully"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/dto.PaginationResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "dto.CourseResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "A comprehensive course for beginners learning Japanese language"
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "estimatedHours": {
+                    "type": "integer",
+                    "example": 40
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "jlptLevel": {
+                    "$ref": "#/definitions/dto.JlptLevelResponse"
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "publishedAt": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "thumbnailUrl": {
+                    "type": "string",
+                    "example": "https://example.com/images/course-thumbnail.jpg"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Introduction to Japanese"
+                }
+            }
+        },
+        "dto.CourseSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.CourseResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Course created successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
         "dto.CreateCategoryRequest": {
             "type": "object",
             "required": [
@@ -2074,6 +2719,48 @@
                     "maxLength": 100,
                     "minLength": 1,
                     "example": "Animals"
+                }
+            }
+        },
+        "dto.CreateCourseRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "jlptLevelId",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "minLength": 10,
+                    "example": "A comprehensive course for beginners learning Japanese language"
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 1
+                },
+                "estimatedHours": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 40
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 5
+                },
+                "thumbnailUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/images/course-thumbnail.jpg"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "example": "Introduction to Japanese"
                 }
             }
         },
@@ -2432,6 +3119,48 @@
                     "maxLength": 100,
                     "minLength": 1,
                     "example": "Animals"
+                }
+            }
+        },
+        "dto.UpdateCourseRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "jlptLevelId",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "minLength": 10,
+                    "example": "A comprehensive course for beginners learning Japanese language"
+                },
+                "difficulty": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 1
+                },
+                "estimatedHours": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 40
+                },
+                "jlptLevelId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 5
+                },
+                "thumbnailUrl": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "https://example.com/images/course-thumbnail.jpg"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "example": "Introduction to Japanese"
                 }
             }
         },

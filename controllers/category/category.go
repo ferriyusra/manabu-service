@@ -212,14 +212,14 @@ func (c *CategoryController) GetByID(ctx *gin.Context) {
 // @Description  Retrieve all categories for a specific JLPT level with pagination
 // @Tags         Categories
 // @Produce      json
-// @Param        jlpt_level_id path int true "JLPT Level ID"
+// @Param        jlptLevelId path int true "JLPT Level ID"
 // @Param        page query int false "Page number" default(1) minimum(1)
 // @Param        limit query int false "Items per page" default(10) minimum(1) maximum(100)
 // @Success      200 {object} response.Response{data=[]dto.CategoryResponse,pagination=dto.PaginationResponse}
 // @Failure      400 {object} response.Response
-// @Router       /categories/jlpt/{jlpt_level_id} [get]
+// @Router       /categories/jlpt/{jlptLevelId} [get]
 func (c *CategoryController) GetByJlptLevelID(ctx *gin.Context) {
-	idParam := ctx.Param("jlpt_level_id")
+	idParam := ctx.Param("jlptLevelId")
 	if idParam == "" {
 		response.HttpResponse(response.ParamHTTPResp{
 			Code: http.StatusBadRequest,

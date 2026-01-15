@@ -17,6 +17,64 @@ definitions:
         example: Animals
         type: string
     type: object
+  dto.CourseListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.CourseResponse'
+        type: array
+      message:
+        example: Courses retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.CourseResponse:
+    properties:
+      description:
+        example: A comprehensive course for beginners learning Japanese language
+        type: string
+      difficulty:
+        example: 1
+        type: integer
+      estimatedHours:
+        example: 40
+        type: integer
+      id:
+        example: 1
+        type: integer
+      isPublished:
+        example: true
+        type: boolean
+      jlptLevel:
+        $ref: '#/definitions/dto.JlptLevelResponse'
+      jlptLevelId:
+        example: 5
+        type: integer
+      publishedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      thumbnailUrl:
+        example: https://example.com/images/course-thumbnail.jpg
+        type: string
+      title:
+        example: Introduction to Japanese
+        type: string
+    type: object
+  dto.CourseSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.CourseResponse'
+      message:
+        example: Course created successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   dto.CreateCategoryRequest:
     properties:
       description:
@@ -35,6 +93,39 @@ definitions:
     required:
     - jlptLevelId
     - name
+    type: object
+  dto.CreateCourseRequest:
+    properties:
+      description:
+        example: A comprehensive course for beginners learning Japanese language
+        minLength: 10
+        type: string
+      difficulty:
+        example: 1
+        maximum: 5
+        minimum: 1
+        type: integer
+      estimatedHours:
+        example: 40
+        minimum: 1
+        type: integer
+      jlptLevelId:
+        example: 5
+        minimum: 1
+        type: integer
+      thumbnailUrl:
+        example: https://example.com/images/course-thumbnail.jpg
+        maxLength: 255
+        type: string
+      title:
+        example: Introduction to Japanese
+        maxLength: 200
+        minLength: 3
+        type: string
+    required:
+    - description
+    - jlptLevelId
+    - title
     type: object
   dto.CreateJlptLevelRequest:
     properties:
@@ -294,6 +385,39 @@ definitions:
     required:
     - jlptLevelId
     - name
+    type: object
+  dto.UpdateCourseRequest:
+    properties:
+      description:
+        example: A comprehensive course for beginners learning Japanese language
+        minLength: 10
+        type: string
+      difficulty:
+        example: 1
+        maximum: 5
+        minimum: 1
+        type: integer
+      estimatedHours:
+        example: 40
+        minimum: 1
+        type: integer
+      jlptLevelId:
+        example: 5
+        minimum: 1
+        type: integer
+      thumbnailUrl:
+        example: https://example.com/images/course-thumbnail.jpg
+        maxLength: 255
+        type: string
+      title:
+        example: Introduction to Japanese
+        maxLength: 200
+        minLength: 3
+        type: string
+    required:
+    - description
+    - jlptLevelId
+    - title
     type: object
   dto.UpdateJlptLevelRequest:
     properties:
@@ -941,13 +1065,13 @@ paths:
       summary: Update Category
       tags:
       - Categories
-  /categories/jlpt/{jlpt_level_id}:
+  /categories/jlpt/{jlptLevelId}:
     get:
       description: Retrieve all categories for a specific JLPT level with pagination
       parameters:
       - description: JLPT Level ID
         in: path
-        name: jlpt_level_id
+        name: jlptLevelId
         required: true
         type: integer
       - default: 1
@@ -986,6 +1110,384 @@ paths:
       summary: Get Categories by JLPT Level
       tags:
       - Categories
+  /courses:
+    get:
+      description: Retrieve courses with advanced filtering, search, sorting, and
+        pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by JLPT Level ID
+        example: 5
+        in: query
+        name: jlptLevelId
+        type: integer
+      - description: Filter by difficulty (1-5)
+        in: query
+        maximum: 5
+        minimum: 1
+        name: difficulty
+        type: integer
+      - description: Filter by publication status
+        example: true
+        in: query
+        name: isPublished
+        type: boolean
+      - description: Search in title or description
+        example: '"japanese"'
+        in: query
+        name: search
+        type: string
+      - default: created_at
+        description: Sort by field (title, difficulty, created_at)
+        example: '"title"'
+        in: query
+        name: sortBy
+        type: string
+      - default: desc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Courses
+      tags:
+      - Courses
+    post:
+      consumes:
+      - application/json
+      description: Create a new course entry (admin only)
+      parameters:
+      - description: Course details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CourseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Course with this title already exists for this JLPT level
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid JLPT level ID or difficulty
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Course
+      tags:
+      - Courses
+  /courses/{id}:
+    delete:
+      description: Delete a course entry by ID (admin only)
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Course
+      tags:
+      - Courses
+    get:
+      description: Retrieve a specific course entry by ID
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Course by ID
+      tags:
+      - Courses
+    put:
+      consumes:
+      - application/json
+      description: Update an existing course entry by ID (admin only)
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated course details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Course with this title already exists for this JLPT level
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid JLPT level ID or difficulty
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Course
+      tags:
+      - Courses
+  /courses/{id}/publish:
+    post:
+      description: Publish a course by ID (admin only) - sets is_published=true and
+        published_at=now
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseSwaggerResponse'
+        "400":
+          description: Course is already published
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Publish Course
+      tags:
+      - Courses
+  /courses/{id}/unpublish:
+    post:
+      description: Unpublish a course by ID (admin only) - sets is_published=false
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseSwaggerResponse'
+        "400":
+          description: Course is not published
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Unpublish Course
+      tags:
+      - Courses
+  /courses/published:
+    get:
+      description: Retrieve only published courses with filtering, search, sorting,
+        and pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by JLPT Level ID
+        example: 5
+        in: query
+        name: jlptLevelId
+        type: integer
+      - description: Filter by difficulty (1-5)
+        in: query
+        maximum: 5
+        minimum: 1
+        name: difficulty
+        type: integer
+      - description: Search in title or description
+        example: '"japanese"'
+        in: query
+        name: search
+        type: string
+      - default: created_at
+        description: Sort by field (title, difficulty, created_at)
+        example: '"title"'
+        in: query
+        name: sortBy
+        type: string
+      - default: desc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CourseListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Published Courses
+      tags:
+      - Courses
   /jlpt-levels:
     get:
       description: Retrieve all JLPT levels ordered by level
@@ -1646,17 +2148,17 @@ paths:
       - description: Filter by JLPT Level ID
         example: 5
         in: query
-        name: jlpt_level_id
+        name: jlptLevelId
         type: integer
       - description: Filter by Category ID
         example: 1
         in: query
-        name: category_id
+        name: categoryId
         type: integer
       - description: Filter by part of speech
         example: '"noun"'
         in: query
-        name: part_of_speech
+        name: partOfSpeech
         type: string
       - description: Filter by difficulty (1-5)
         in: query
@@ -1673,13 +2175,13 @@ paths:
         description: Sort by field (word, difficulty, created_at)
         example: '"word"'
         in: query
-        name: sort_by
+        name: sortBy
         type: string
       - default: desc
         description: Sort order (asc, desc)
         example: '"asc"'
         in: query
-        name: sort_order
+        name: sortOrder
         type: string
       produces:
       - application/json

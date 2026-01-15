@@ -3,9 +3,10 @@
 ## 🎯 Quick Overview
 
 ```
-Overall Progress: ████░░░░░░░░░░░░ 33% (5/15 APIs)
+Overall Progress: ██████░░░░░░░░░░ 40% (6/15 APIs)
 
 MVP Progress:     ████████████████ 100% (5/5 APIs) ✅ COMPLETE!
+Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs)
 ```
 
 ---
@@ -57,16 +58,29 @@ MVP Progress:     ████████████████ 100% (5/5 API
   - Created migration & comprehensive documentation
   - **Quality**: Production-ready (simplified & user-friendly)
 
+#### Week 3 (Learning Content - Part 1)
+- ✅ **Courses API** 🎉 **COMPLETED!**
+  - 8 endpoints (CRUD + publish/unpublish + get published)
+  - Advanced filtering (JLPT level, difficulty, published status, search)
+  - Case-insensitive search & uniqueness check
+  - Publish/Unpublish functionality with timestamp management
+  - Code reviewed & all critical/major issues fixed
+  - SQL injection prevention with whitelist validation
+  - Proper error constants (including ErrInvalidCourseEstimatedHours)
+  - Database migration created (004_create_courses_table.sql)
+  - Complete Swagger documentation
+  - **Quality**: Production-ready (8.5/10 → 9.3/10 after fixes)
+
 ---
 
 ### 🔄 CURRENT WEEK
 
-#### Week 3 (Learning Content - Part 1)
-- 🔴 **Courses API** ← YOU ARE HERE
+#### Week 3 (Learning Content - Part 2)
+- 🔴 **Lessons API** ← YOU ARE HERE
   - Priority: HIGH
   - Complexity: MEDIUM
-  - 8 endpoints
-  - Next target after MVP completion
+  - 6 endpoints
+  - Next target after Courses API
 
 ---
 
@@ -160,7 +174,7 @@ MVP Progress:     ████████████████ 100% (5/5 API
 | 4  | Vocabulary               | ✅     | CRITICAL | 5         | HIGH       | DONE      |
 | 5  | Tags                     | ✅     | MEDIUM   | 6         | MEDIUM     | DONE      |
 | 6  | User Vocab Status        | ✅     | CRITICAL | 5         | HIGH       | DONE      |
-| 7  | Courses                  | 🔴     | HIGH     | 8         | MEDIUM     | 2 days    |
+| 7  | Courses                  | ✅     | HIGH     | 8         | MEDIUM     | DONE      |
 | 8  | Lessons                  | 🔴     | HIGH     | 6         | MEDIUM     | 1 day     |
 | 9  | Exercises                | 🔴     | HIGH     | 6         | MEDIUM     | 2 days    |
 | 10 | Exercise Questions       | 🔴     | HIGH     | 5         | MEDIUM     | 1 day     |
@@ -198,18 +212,27 @@ MVP Progress:     ████████████████ 100% (5/5 API
    - ✅ Update endpoint to use vocabulary_id (snake_case)
    - ✅ Create migration & documentation
 
+5. ✅ **Complete Courses API** 🎉 Learning Platform Phase Started!
+   - ✅ Use golang-pro agent (8 endpoints implemented)
+   - ✅ Code review with code-review-expert (Initial score: 8.5/10)
+   - ✅ Fix all critical issues (SQL injection, published_at clearing, error constants)
+   - ✅ Fix all major issues (case-insensitive uniqueness check)
+   - ✅ Create database migration (004_create_courses_table.sql)
+   - ✅ Complete Swagger documentation
+   - ✅ Quality improved to 9.3/10
+
 ### This Week
-5. 🔄 **Start Courses API** ← NEXT (Learning Platform Phase)
+6. 🔄 **Start Lessons API** ← NEXT (Learning Platform Phase)
 
 ### Next Week
-6. Courses & Lessons APIs
 7. Exercises & Questions APIs
+8. User Progress APIs
 
 ---
 
 ## 💡 Development Best Practices (Learned)
 
-### From Categories, Vocabulary & Tags API Implementation:
+### From Categories, Vocabulary, Tags & Courses API Implementation:
 ✅ **DO**:
 - Add unique constraints at database level
 - Check RowsAffected in Update operations
@@ -223,6 +246,10 @@ MVP Progress:     ████████████████ 100% (5/5 API
 - Add database indexes for foreign keys
 - Validate URLs with `url` validator tag
 - Add godoc comments to all interfaces
+- **Use whitelist validation for ORDER BY clauses** (prevent SQL injection)
+- **Case-insensitive search and uniqueness checks** (LOWER() function)
+- **Create specific error constants** for each validation type
+- **Clear related timestamps** when unpublishing/deactivating
 - Ensure validation logic is consistent (1-5, not 0-5)
 - Create specific error constants (e.g., ErrInvalidTagName vs generic ErrInvalidID)
 - Use case-insensitive search with LOWER() for name fields
@@ -304,7 +331,7 @@ MVP Progress:     ████████████████ 100% (5/5 API
 ---
 
 **Current Sprint**: Learning Platform Phase (Week 3)
-**Sprint Goal**: Start building course/lesson structure
-**Last Updated**: 2026-01-11
-**Last Completed**: User Vocabulary Status API ✅ 🎉 **MVP COMPLETE!**
-**Next Target**: Courses API (Learning Platform Phase)
+**Sprint Goal**: Complete course/lesson structure APIs
+**Last Updated**: 2026-01-14
+**Last Completed**: Courses API ✅ 🎉 **Learning Platform Phase Started!**
+**Next Target**: Lessons API (Learning Platform Phase)

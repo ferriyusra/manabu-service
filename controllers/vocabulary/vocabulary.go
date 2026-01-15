@@ -112,13 +112,13 @@ func (c *VocabularyController) Create(ctx *gin.Context) {
 // @Produce      json
 // @Param        page query int false "Page number" default(1) minimum(1)
 // @Param        limit query int false "Items per page" default(10) minimum(1) maximum(100)
-// @Param        jlpt_level_id query int false "Filter by JLPT Level ID" example(5)
-// @Param        category_id query int false "Filter by Category ID" example(1)
-// @Param        part_of_speech query string false "Filter by part of speech" example("noun")
+// @Param        jlptLevelId query int false "Filter by JLPT Level ID" example(5)
+// @Param        categoryId query int false "Filter by Category ID" example(1)
+// @Param        partOfSpeech query string false "Filter by part of speech" example("noun")
 // @Param        difficulty query int false "Filter by difficulty (1-5)" minimum(1) maximum(5)
 // @Param        search query string false "Search in word, reading, or meaning" example("dog")
-// @Param        sort_by query string false "Sort by field (word, difficulty, created_at)" default(created_at) example("word")
-// @Param        sort_order query string false "Sort order (asc, desc)" default(desc) example("asc")
+// @Param        sortBy query string false "Sort by field (word, difficulty, created_at)" default(created_at) example("word")
+// @Param        sortOrder query string false "Sort order (asc, desc)" default(desc) example("asc")
 // @Success      200 {object} dto.VocabularyListSwaggerResponse
 // @Failure      400 {object} response.Response
 // @Failure      422 {object} response.Response
