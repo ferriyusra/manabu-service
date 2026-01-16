@@ -28,6 +28,9 @@ func (r *LessonRoute) Run() {
 	lessonGroup.GET("", r.controller.GetLessonController().GetAll)
 	lessonGroup.GET("/:id", r.controller.GetLessonController().GetByID)
 
+	// Nested route: Get exercises by lesson ID
+	lessonGroup.GET("/:id/exercises", r.controller.GetExerciseController().GetByLessonID)
+
 	// Admin endpoints (require authentication)
 	lessonGroup.POST("", middlewares.Authenticate(), r.controller.GetLessonController().Create)
 	lessonGroup.PUT("/:id", middlewares.Authenticate(), r.controller.GetLessonController().Update)

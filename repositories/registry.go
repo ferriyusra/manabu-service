@@ -3,6 +3,7 @@ package repositories
 import (
 	categoryRepo "manabu-service/repositories/category"
 	courseRepo "manabu-service/repositories/course"
+	exerciseRepo "manabu-service/repositories/exercise"
 	jlptLevelRepo "manabu-service/repositories/jlpt_level"
 	lessonRepo "manabu-service/repositories/lesson"
 	tagRepo "manabu-service/repositories/tag"
@@ -26,6 +27,7 @@ type IRepositoryRegistry interface {
 	GetUserVocabularyStatus() userVocabStatusRepo.IUserVocabularyStatusRepository
 	GetCourse() courseRepo.ICourseRepository
 	GetLesson() lessonRepo.ILessonRepository
+	GetExercise() exerciseRepo.IExerciseRepository
 }
 
 func NewRepositoryRegistry(db *gorm.DB) IRepositoryRegistry {
@@ -62,4 +64,8 @@ func (r *Registry) GetCourse() courseRepo.ICourseRepository {
 
 func (r *Registry) GetLesson() lessonRepo.ILessonRepository {
 	return lessonRepo.NewLessonRepository(r.db)
+}
+
+func (r *Registry) GetExercise() exerciseRepo.IExerciseRepository {
+	return exerciseRepo.NewExerciseRepository(r.db)
 }

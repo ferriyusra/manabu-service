@@ -4,6 +4,7 @@ import (
 	"manabu-service/controllers"
 	categoryRoute "manabu-service/routes/category"
 	courseRoute "manabu-service/routes/course"
+	exerciseRoute "manabu-service/routes/exercise"
 	jlptLevelRoute "manabu-service/routes/jlpt_level"
 	lessonRoute "manabu-service/routes/lesson"
 	tagRoute "manabu-service/routes/tag"
@@ -36,6 +37,7 @@ func (r *Registry) Serve() {
 	r.userVocabularyStatusRoute().Run()
 	r.courseRoute().Run()
 	r.lessonRoute().Run()
+	r.exerciseRoute().Run()
 }
 
 func (r *Registry) userRoute() routes.IUserRoute {
@@ -68,4 +70,8 @@ func (r *Registry) courseRoute() courseRoute.ICourseRoute {
 
 func (r *Registry) lessonRoute() lessonRoute.ILessonRoute {
 	return lessonRoute.NewLessonRoute(r.controller, r.group)
+}
+
+func (r *Registry) exerciseRoute() exerciseRoute.IExerciseRoute {
+	return exerciseRoute.NewExerciseRoute(r.controller, r.group)
 }

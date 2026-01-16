@@ -1311,6 +1311,433 @@ const docTemplate = `{
                 }
             }
         },
+        "/exercises": {
+            "get": {
+                "description": "Retrieve exercises with advanced filtering, search, sorting, and pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Get all Exercises",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Filter by Lesson ID",
+                        "name": "lessonId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"fill_blank\"",
+                        "description": "Filter by exercise type (multiple_choice, fill_blank, matching, listening, speaking)",
+                        "name": "exerciseType",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": true,
+                        "description": "Filter by publication status",
+                        "name": "isPublished",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"hiragana\"",
+                        "description": "Search in title and description",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "order_index",
+                        "example": "\"order_index\"",
+                        "description": "Sort by field (order_index, title, created_at, difficulty_level)",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "asc",
+                        "example": "\"asc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseListSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new exercise entry for a lesson (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Create Exercise",
+                "parameters": [
+                    {
+                        "description": "Exercise details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateExerciseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Exercise with this order_index already exists for this lesson",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid lesson ID, exercise type, difficulty level, or order_index",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercises/{id}": {
+            "get": {
+                "description": "Retrieve a specific exercise entry by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Get Exercise by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing exercise entry by ID (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Update Exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated exercise details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateExerciseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Exercise with this order_index already exists for this lesson",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid lesson ID, exercise type, difficulty level, or order_index",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete an exercise entry by ID (admin only)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Delete Exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercises/{id}/publish": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the publication status of an exercise by ID (admin only) - PATCH request with isPublished boolean",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Publish/Unpublish Exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Publish status (true to publish, false to unpublish)",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PublishExerciseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Exercise is already in the requested state",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/jlpt-levels": {
             "get": {
                 "description": "Retrieve all JLPT levels ordered by level",
@@ -1915,6 +2342,68 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Lesson not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/lessons/{id}/exercises": {
+            "get": {
+                "description": "Retrieve all exercises for a specific lesson, ordered by order_index",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Lessons"
+                ],
+                "summary": "Get Exercises by Lesson ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.ExerciseResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid lesson ID",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -3292,6 +3781,61 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreateExerciseRequest": {
+            "type": "object",
+            "required": [
+                "exerciseType",
+                "lessonId",
+                "orderIndex",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "example": "Complete the sentences by filling in the correct Hiragana character"
+                },
+                "difficultyLevel": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 2
+                },
+                "estimatedMinutes": {
+                    "type": "integer",
+                    "maximum": 60,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "exerciseType": {
+                    "type": "string",
+                    "enum": [
+                        "multiple_choice",
+                        "fill_blank",
+                        "matching",
+                        "listening",
+                        "speaking"
+                    ],
+                    "example": "fill_blank"
+                },
+                "lessonId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "example": "Fill in the Hiragana"
+                }
+            }
+        },
         "dto.CreateJlptLevelRequest": {
             "type": "object",
             "required": [
@@ -3463,6 +4007,92 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ExerciseListSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ExerciseResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Exercises retrieved successfully"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/dto.PaginationResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "dto.ExerciseResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Complete the sentences by filling in the correct Hiragana character"
+                },
+                "difficultyLevel": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "estimatedMinutes": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "exerciseType": {
+                    "type": "string",
+                    "example": "fill_blank"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "lesson": {
+                    "$ref": "#/definitions/dto.LessonResponse"
+                },
+                "lessonId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "publishedAt": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Fill in the Hiragana"
+                }
+            }
+        },
+        "dto.ExerciseSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.ExerciseResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Exercise created successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
         "dto.JlptLevelResponse": {
             "type": "object",
             "properties": {
@@ -3610,6 +4240,18 @@ const docTemplate = `{
                 "totalPages": {
                     "type": "integer",
                     "example": 5
+                }
+            }
+        },
+        "dto.PublishExerciseRequest": {
+            "type": "object",
+            "required": [
+                "isPublished"
+            ],
+            "properties": {
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },
@@ -3802,6 +4444,61 @@ const docTemplate = `{
                     "maxLength": 200,
                     "minLength": 3,
                     "example": "Introduction to Japanese"
+                }
+            }
+        },
+        "dto.UpdateExerciseRequest": {
+            "type": "object",
+            "required": [
+                "exerciseType",
+                "lessonId",
+                "orderIndex",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "example": "Complete the sentences by filling in the correct Hiragana character"
+                },
+                "difficultyLevel": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1,
+                    "example": 2
+                },
+                "estimatedMinutes": {
+                    "type": "integer",
+                    "maximum": 60,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "exerciseType": {
+                    "type": "string",
+                    "enum": [
+                        "multiple_choice",
+                        "fill_blank",
+                        "matching",
+                        "listening",
+                        "speaking"
+                    ],
+                    "example": "fill_blank"
+                },
+                "lessonId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "example": "Fill in the Hiragana"
                 }
             }
         },

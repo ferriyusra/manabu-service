@@ -4,6 +4,7 @@ import (
 	"manabu-service/repositories"
 	categoryService "manabu-service/services/category"
 	courseService "manabu-service/services/course"
+	exerciseService "manabu-service/services/exercise"
 	jlptLevelService "manabu-service/services/jlpt_level"
 	lessonService "manabu-service/services/lesson"
 	tagService "manabu-service/services/tag"
@@ -25,6 +26,7 @@ type IServiceRegistry interface {
 	GetUserVocabularyStatus() userVocabStatusService.IUserVocabularyStatusService
 	GetCourse() courseService.ICourseService
 	GetLesson() lessonService.ILessonService
+	GetExercise() exerciseService.IExerciseService
 }
 
 func NewServiceRegistry(repository repositories.IRepositoryRegistry) IServiceRegistry {
@@ -61,4 +63,8 @@ func (r *Registry) GetCourse() courseService.ICourseService {
 
 func (r *Registry) GetLesson() lessonService.ILessonService {
 	return lessonService.NewLessonService(r.repository)
+}
+
+func (r *Registry) GetExercise() exerciseService.IExerciseService {
+	return exerciseService.NewExerciseService(r.repository)
 }

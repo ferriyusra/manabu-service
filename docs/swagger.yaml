@@ -127,6 +127,50 @@ definitions:
     - jlptLevelId
     - title
     type: object
+  dto.CreateExerciseRequest:
+    properties:
+      description:
+        example: Complete the sentences by filling in the correct Hiragana character
+        maxLength: 1000
+        type: string
+      difficultyLevel:
+        example: 2
+        maximum: 5
+        minimum: 1
+        type: integer
+      estimatedMinutes:
+        example: 10
+        maximum: 60
+        minimum: 1
+        type: integer
+      exerciseType:
+        enum:
+        - multiple_choice
+        - fill_blank
+        - matching
+        - listening
+        - speaking
+        example: fill_blank
+        type: string
+      lessonId:
+        example: 1
+        minimum: 1
+        type: integer
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      title:
+        example: Fill in the Hiragana
+        maxLength: 200
+        minLength: 3
+        type: string
+    required:
+    - exerciseType
+    - lessonId
+    - orderIndex
+    - title
+    type: object
   dto.CreateJlptLevelRequest:
     properties:
       code:
@@ -258,6 +302,67 @@ definitions:
     - meaning
     - word
     type: object
+  dto.ExerciseListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.ExerciseResponse'
+        type: array
+      message:
+        example: Exercises retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.ExerciseResponse:
+    properties:
+      description:
+        example: Complete the sentences by filling in the correct Hiragana character
+        type: string
+      difficultyLevel:
+        example: 2
+        type: integer
+      estimatedMinutes:
+        example: 10
+        type: integer
+      exerciseType:
+        example: fill_blank
+        type: string
+      id:
+        example: 1
+        type: integer
+      isPublished:
+        example: true
+        type: boolean
+      lesson:
+        $ref: '#/definitions/dto.LessonResponse'
+      lessonId:
+        example: 1
+        type: integer
+      orderIndex:
+        example: 1
+        type: integer
+      publishedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      title:
+        example: Fill in the Hiragana
+        type: string
+    type: object
+  dto.ExerciseSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.ExerciseResponse'
+      message:
+        example: Exercise created successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   dto.JlptLevelResponse:
     properties:
       code:
@@ -362,6 +467,14 @@ definitions:
       totalPages:
         example: 5
         type: integer
+    type: object
+  dto.PublishExerciseRequest:
+    properties:
+      isPublished:
+        example: true
+        type: boolean
+    required:
+    - isPublished
     type: object
   dto.RegisterRequest:
     properties:
@@ -499,6 +612,50 @@ definitions:
     required:
     - description
     - jlptLevelId
+    - title
+    type: object
+  dto.UpdateExerciseRequest:
+    properties:
+      description:
+        example: Complete the sentences by filling in the correct Hiragana character
+        maxLength: 1000
+        type: string
+      difficultyLevel:
+        example: 2
+        maximum: 5
+        minimum: 1
+        type: integer
+      estimatedMinutes:
+        example: 10
+        maximum: 60
+        minimum: 1
+        type: integer
+      exerciseType:
+        enum:
+        - multiple_choice
+        - fill_blank
+        - matching
+        - listening
+        - speaking
+        example: fill_blank
+        type: string
+      lessonId:
+        example: 1
+        minimum: 1
+        type: integer
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      title:
+        example: Fill in the Hiragana
+        maxLength: 200
+        minLength: 3
+        type: string
+    required:
+    - exerciseType
+    - lessonId
+    - orderIndex
     - title
     type: object
   dto.UpdateJlptLevelRequest:
@@ -1635,6 +1792,291 @@ paths:
       summary: Get Published Courses
       tags:
       - Courses
+  /exercises:
+    get:
+      description: Retrieve exercises with advanced filtering, search, sorting, and
+        pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by Lesson ID
+        example: 1
+        in: query
+        name: lessonId
+        type: integer
+      - description: Filter by exercise type (multiple_choice, fill_blank, matching,
+          listening, speaking)
+        example: '"fill_blank"'
+        in: query
+        name: exerciseType
+        type: string
+      - description: Filter by publication status
+        example: true
+        in: query
+        name: isPublished
+        type: boolean
+      - description: Search in title and description
+        example: '"hiragana"'
+        in: query
+        name: search
+        type: string
+      - default: order_index
+        description: Sort by field (order_index, title, created_at, difficulty_level)
+        example: '"order_index"'
+        in: query
+        name: sortBy
+        type: string
+      - default: asc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Exercises
+      tags:
+      - Exercises
+    post:
+      consumes:
+      - application/json
+      description: Create a new exercise entry for a lesson (admin only)
+      parameters:
+      - description: Exercise details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateExerciseRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ExerciseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Exercise with this order_index already exists for this lesson
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid lesson ID, exercise type, difficulty level, or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Exercise
+      tags:
+      - Exercises
+  /exercises/{id}:
+    delete:
+      description: Delete an exercise entry by ID (admin only)
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Exercise
+      tags:
+      - Exercises
+    get:
+      description: Retrieve a specific exercise entry by ID
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Exercise by ID
+      tags:
+      - Exercises
+    put:
+      consumes:
+      - application/json
+      description: Update an existing exercise entry by ID (admin only)
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated exercise details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateExerciseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Exercise with this order_index already exists for this lesson
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid lesson ID, exercise type, difficulty level, or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Exercise
+      tags:
+      - Exercises
+  /exercises/{id}/publish:
+    patch:
+      consumes:
+      - application/json
+      description: Update the publication status of an exercise by ID (admin only)
+        - PATCH request with isPublished boolean
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Publish status (true to publish, false to unpublish)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PublishExerciseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseSwaggerResponse'
+        "400":
+          description: Exercise is already in the requested state
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Publish/Unpublish Exercise
+      tags:
+      - Exercises
   /jlpt-levels:
     get:
       description: Retrieve all JLPT levels ordered by level
@@ -2027,6 +2469,44 @@ paths:
       security:
       - BearerAuth: []
       summary: Update Lesson
+      tags:
+      - Lessons
+  /lessons/{id}/exercises:
+    get:
+      description: Retrieve all exercises for a specific lesson, ordered by order_index
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.ExerciseResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid lesson ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Exercises by Lesson ID
       tags:
       - Lessons
   /lessons/{id}/publish:

@@ -3,6 +3,7 @@ package controllers
 import (
 	categoryController "manabu-service/controllers/category"
 	courseController "manabu-service/controllers/course"
+	exerciseController "manabu-service/controllers/exercise"
 	jlptLevelController "manabu-service/controllers/jlpt_level"
 	lessonController "manabu-service/controllers/lesson"
 	tagController "manabu-service/controllers/tag"
@@ -25,6 +26,7 @@ type IControllerRegistry interface {
 	GetUserVocabularyStatusController() userVocabStatusController.IUserVocabularyStatusController
 	GetCourseController() courseController.ICourseController
 	GetLessonController() lessonController.ILessonController
+	GetExerciseController() exerciseController.IExerciseController
 }
 
 func NewControllerRegistry(service services.IServiceRegistry) IControllerRegistry {
@@ -61,4 +63,8 @@ func (u *Registry) GetCourseController() courseController.ICourseController {
 
 func (u *Registry) GetLessonController() lessonController.ILessonController {
 	return lessonController.NewLessonController(u.service)
+}
+
+func (u *Registry) GetExerciseController() exerciseController.IExerciseController {
+	return exerciseController.NewExerciseController(u.service)
 }
