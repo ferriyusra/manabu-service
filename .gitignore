@@ -5,3 +5,4 @@ tmp
 .env
 config.json
 # docs
+.claude
