@@ -27,6 +27,7 @@ func (r *CourseRoute) Run() {
 	group.GET("", r.controller.GetCourseController().GetAll)
 	group.GET("/published", r.controller.GetCourseController().GetPublished)
 	group.GET("/:id", r.controller.GetCourseController().GetByID)
+	group.GET("/:id/lessons", r.controller.GetLessonController().GetByCourseID)
 
 	// Admin endpoints (require authentication)
 	group.POST("", middlewares.Authenticate(), r.controller.GetCourseController().Create)

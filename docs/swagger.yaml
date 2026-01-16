@@ -149,6 +149,33 @@ definitions:
     - levelOrder
     - name
     type: object
+  dto.CreateLessonRequest:
+    properties:
+      content:
+        example: Learn the basics of Hiragana characters...
+        type: string
+      courseId:
+        example: 1
+        minimum: 1
+        type: integer
+      estimatedMinutes:
+        example: 30
+        minimum: 0
+        type: integer
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      title:
+        example: Introduction to Hiragana
+        maxLength: 255
+        minLength: 3
+        type: string
+    required:
+    - courseId
+    - orderIndex
+    - title
+    type: object
   dto.CreateTagRequest:
     properties:
       color:
@@ -247,6 +274,61 @@ definitions:
         type: integer
       name:
         example: JLPT N5
+        type: string
+    type: object
+  dto.LessonListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.LessonResponse'
+        type: array
+      message:
+        example: Lessons retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.LessonResponse:
+    properties:
+      content:
+        example: Learn the basics of Hiragana characters...
+        type: string
+      course:
+        $ref: '#/definitions/dto.CourseResponse'
+      courseId:
+        example: 1
+        type: integer
+      estimatedMinutes:
+        example: 30
+        type: integer
+      id:
+        example: 1
+        type: integer
+      isPublished:
+        example: true
+        type: boolean
+      orderIndex:
+        example: 1
+        type: integer
+      publishedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      title:
+        example: Introduction to Hiragana
+        type: string
+    type: object
+  dto.LessonSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.LessonResponse'
+      message:
+        example: Lesson created successfully
+        type: string
+      status:
+        example: success
         type: string
     type: object
   dto.LoginRequest:
@@ -440,6 +522,33 @@ definitions:
     - description
     - levelOrder
     - name
+    type: object
+  dto.UpdateLessonRequest:
+    properties:
+      content:
+        example: Learn the basics of Hiragana characters...
+        type: string
+      courseId:
+        example: 1
+        minimum: 1
+        type: integer
+      estimatedMinutes:
+        example: 30
+        minimum: 0
+        type: integer
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      title:
+        example: Introduction to Hiragana
+        maxLength: 255
+        minLength: 3
+        type: string
+    required:
+    - courseId
+    - orderIndex
+    - title
     type: object
   dto.UpdateRequest:
     properties:
@@ -1345,6 +1454,44 @@ paths:
       summary: Update Course
       tags:
       - Courses
+  /courses/{id}/lessons:
+    get:
+      description: Retrieve all lessons for a specific course, ordered by order_index
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.LessonResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Lessons by Course ID
+      tags:
+      - Lessons
   /courses/{id}/publish:
     post:
       description: Publish a course by ID (admin only) - sets is_published=true and
@@ -1653,6 +1800,310 @@ paths:
       summary: Update JLPT Level
       tags:
       - JLPT Levels
+  /lessons:
+    get:
+      description: Retrieve lessons with advanced filtering, search, sorting, and
+        pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by Course ID
+        example: 1
+        in: query
+        name: courseId
+        type: integer
+      - description: Filter by publication status
+        example: true
+        in: query
+        name: isPublished
+        type: boolean
+      - description: Search in title
+        example: '"hiragana"'
+        in: query
+        name: search
+        type: string
+      - default: order_index
+        description: Sort by field (order_index, title, created_at)
+        example: '"order_index"'
+        in: query
+        name: sortBy
+        type: string
+      - default: asc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LessonListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Lessons
+      tags:
+      - Lessons
+    post:
+      consumes:
+      - application/json
+      description: Create a new lesson entry for a course (admin only)
+      parameters:
+      - description: Lesson details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateLessonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.LessonSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Lesson with this order_index already exists for this course
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid course ID or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Lesson
+      tags:
+      - Lessons
+  /lessons/{id}:
+    delete:
+      description: Delete a lesson entry by ID (admin only)
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Lesson
+      tags:
+      - Lessons
+    get:
+      description: Retrieve a specific lesson entry by ID
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LessonSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Lesson by ID
+      tags:
+      - Lessons
+    put:
+      consumes:
+      - application/json
+      description: Update an existing lesson entry by ID (admin only)
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated lesson details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateLessonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LessonSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Lesson with this order_index already exists for this course
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid course ID or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Lesson
+      tags:
+      - Lessons
+  /lessons/{id}/publish:
+    post:
+      description: Publish a lesson by ID (admin only) - sets is_published=true and
+        published_at=now
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LessonSwaggerResponse'
+        "400":
+          description: Lesson is already published
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Publish Lesson
+      tags:
+      - Lessons
+  /lessons/{id}/unpublish:
+    post:
+      description: Unpublish a lesson by ID (admin only) - sets is_published=false
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LessonSwaggerResponse'
+        "400":
+          description: Lesson is not published
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Lesson not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Unpublish Lesson
+      tags:
+      - Lessons
   /tags:
     get:
       description: Retrieve all tags with optional search and pagination

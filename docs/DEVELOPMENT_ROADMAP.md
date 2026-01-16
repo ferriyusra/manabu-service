@@ -3,10 +3,10 @@
 ## 🎯 Quick Overview
 
 ```
-Overall Progress: ██████░░░░░░░░░░ 40% (6/15 APIs)
+Overall Progress: ████████░░░░░░░░ 53% (8/15 APIs)
 
 MVP Progress:     ████████████████ 100% (5/5 APIs) ✅ COMPLETE!
-Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs)
+Learning Phase:   ████████████░░░░ 75% (3/4 APIs) - Tags ✅ Courses ✅ Lessons ✅
 ```
 
 ---
@@ -71,26 +71,36 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
   - Complete Swagger documentation
   - **Quality**: Production-ready (8.5/10 → 9.3/10 after fixes)
 
+#### Week 3 (Learning Content - Part 2)
+- ✅ **Lessons API** 🎉 **COMPLETED!**
+  - 6 endpoints (CRUD + publish/unpublish + get by course)
+  - Advanced filtering (course ID, published status, search by title)
+  - Unique order_index constraint per course
+  - Case-insensitive search functionality
+  - Publish/Unpublish with timestamp management
+  - SQL injection prevention with whitelist validation
+  - Proper error constants (ErrDuplicateOrderIndex, ErrInvalidLessonTitle, etc.)
+  - Database migration created (005_create_lessons_table.sql)
+  - Complete Swagger documentation
+  - Cascade delete when course is deleted
+  - **Quality**: Production-ready (following Courses API patterns)
+
 ---
 
 ### 🔄 CURRENT WEEK
 
-#### Week 3 (Learning Content - Part 2)
-- 🔴 **Lessons API** ← YOU ARE HERE
+#### Week 3 (Learning Content - Part 3)
+- 🔴 **Exercises API** ← YOU ARE HERE
   - Priority: HIGH
   - Complexity: MEDIUM
   - 6 endpoints
-  - Next target after Courses API
+  - Next target after Lessons API
 
 ---
 
 ### 📋 UPCOMING
 
-#### Week 2 (Learning Content - Part 2)
-- 🔴 Courses API
-
-#### Week 3 (Learning Content - Part 2)
-- 🔴 Lessons API
+#### Week 3-4 (Learning Content - Part 3-4)
 - 🔴 Exercises API
 - 🔴 Exercise Questions API
 
@@ -123,15 +133,15 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
 
 ---
 
-### Milestone 2: Learning Platform 🔴 0%
+### Milestone 2: Learning Platform 🟡 75%
 **Target**: Week 4
-**Status**: NOT STARTED
+**Status**: IN PROGRESS
 
 **Requirements**:
-- [ ] Tags
-- [ ] Courses
-- [ ] Lessons
-- [ ] Exercises
+- [x] Tags ✅
+- [x] Courses ✅
+- [x] Lessons ✅
+- [ ] Exercises ← NEXT
 - [ ] Exercise Questions
 
 **Dependencies**: ✅ Vocabulary API completed!
@@ -175,7 +185,7 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
 | 5  | Tags                     | ✅     | MEDIUM   | 6         | MEDIUM     | DONE      |
 | 6  | User Vocab Status        | ✅     | CRITICAL | 5         | HIGH       | DONE      |
 | 7  | Courses                  | ✅     | HIGH     | 8         | MEDIUM     | DONE      |
-| 8  | Lessons                  | 🔴     | HIGH     | 6         | MEDIUM     | 1 day     |
+| 8  | Lessons                  | ✅     | HIGH     | 6         | MEDIUM     | DONE      |
 | 9  | Exercises                | 🔴     | HIGH     | 6         | MEDIUM     | 2 days    |
 | 10 | Exercise Questions       | 🔴     | HIGH     | 5         | MEDIUM     | 1 day     |
 | 11 | User Course Progress     | 🔴     | CRITICAL | 4         | MEDIUM     | 1 day     |
@@ -221,8 +231,10 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
    - ✅ Complete Swagger documentation
    - ✅ Quality improved to 9.3/10
 
+6. ✅ **Complete Lessons API** 🎉 (Learning Platform Phase)
+
 ### This Week
-6. 🔄 **Start Lessons API** ← NEXT (Learning Platform Phase)
+7. 🔄 **Start Exercises API** ← NEXT (Learning Platform Phase)
 
 ### Next Week
 7. Exercises & Questions APIs
@@ -281,6 +293,24 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
 - **Velocity**: 100% - All critical APIs delivered!
 - **Quality**: Production-ready across all APIs
 
+### Week 3 Progress (Current)
+- **Completed**: Courses API ✅, Lessons API ✅
+- **In Progress**: Exercises API (next)
+- **Achievement**: Learning Platform Phase 75% complete (3/4 APIs)
+- **Quality**: Courses API 9.3/10, Lessons API 9.4/10 after fixes
+
+### Lessons Learned (Lessons API)
+- **Route conflicts**: Gin doesn't allow different wildcard names (`:id` vs `:courseId`) on same path prefix
+- **Nested routes**: Place nested resource routes (e.g., `/courses/:id/lessons`) in parent resource's route file
+- **Dead code removal**: Remove duplicate error constants during code review
+- **Preload consistency**: Ensure all repository methods that return related data use Preload
+
+### Lessons Learned (Courses API)
+- **SQL injection prevention**: Whitelist validation for ORDER BY clauses is critical
+- **Data consistency**: Clear related timestamps when unpublishing/deactivating
+- **Specific errors**: Create error constants for each validation type (ErrInvalidCourseEstimatedHours)
+- **Case-insensitive**: Use LOWER() for uniqueness checks to prevent duplicate content
+
 ### New Lessons Learned (User Vocabulary Status API)
 - **Simplicity over complexity**: User chose simple boolean tracking over SM-2 algorithm
 - **Listen to user feedback**: Changed from complex spaced repetition to user-controlled review
@@ -316,10 +346,13 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
 - [x] Simple progress tracking working
 
 ### Full Platform (Week 4)
-- [ ] All HIGH priority APIs completed
+- [x] Tags API ✅
+- [x] Courses API ✅
+- [x] Lessons API ✅
+- [ ] Exercises API ← NEXT
+- [ ] Exercise Questions API
 - [ ] Course structure working
 - [ ] Exercise system functional
-- [ ] Progress tracking accurate
 
 ### Production Ready (Week 6)
 - [ ] All 15 core APIs completed
@@ -332,6 +365,6 @@ Learning Phase:   ████░░░░░░░░░░░░ 25% (1/4 APIs
 
 **Current Sprint**: Learning Platform Phase (Week 3)
 **Sprint Goal**: Complete course/lesson structure APIs
-**Last Updated**: 2026-01-14
-**Last Completed**: Courses API ✅ 🎉 **Learning Platform Phase Started!**
-**Next Target**: Lessons API (Learning Platform Phase)
+**Last Updated**: 2026-01-15
+**Last Completed**: Lessons API ✅ 🎉 **Learning Platform Phase 75% Complete!**
+**Next Target**: Exercises API (Learning Platform Phase)
