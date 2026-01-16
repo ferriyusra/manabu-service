@@ -27,7 +27,6 @@ func NewUserVocabularyStatusService(repository repositories.IRepositoryRegistry)
 	return &UserVocabularyStatusService{repository: repository}
 }
 
-
 // Create starts learning a new vocabulary for the user
 func (s *UserVocabularyStatusService) Create(ctx context.Context, req *dto.CreateUserVocabStatusRequest) (*dto.UserVocabStatusResponse, error) {
 	// Get user from context
@@ -208,7 +207,6 @@ func (s *UserVocabularyStatusService) GetDueForReview(ctx context.Context) ([]dt
 
 	return responses, nil
 }
-
 
 // Review processes a vocabulary review with simple progress tracking
 func (s *UserVocabularyStatusService) Review(ctx context.Context, vocabularyID uint, req *dto.ReviewUserVocabStatusRequest) (*dto.UserVocabStatusResponse, error) {

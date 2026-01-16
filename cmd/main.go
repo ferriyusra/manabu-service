@@ -72,6 +72,7 @@ var command = &cobra.Command{
 			&models.Tag{},
 			&models.UserVocabularyStatus{},
 			&models.Course{},
+			&models.Lesson{},
 		)
 		if err != nil {
 			panic(err)
