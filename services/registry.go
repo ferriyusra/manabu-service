@@ -5,10 +5,12 @@ import (
 	categoryService "manabu-service/services/category"
 	courseService "manabu-service/services/course"
 	exerciseService "manabu-service/services/exercise"
+	exerciseQuestionService "manabu-service/services/exercise_question"
 	jlptLevelService "manabu-service/services/jlpt_level"
 	lessonService "manabu-service/services/lesson"
 	tagService "manabu-service/services/tag"
 	services "manabu-service/services/user"
+	userCourseProgressService "manabu-service/services/user_course_progress"
 	userVocabStatusService "manabu-service/services/user_vocabulary_status"
 	vocabularyService "manabu-service/services/vocabulary"
 )
@@ -27,6 +29,8 @@ type IServiceRegistry interface {
 	GetCourse() courseService.ICourseService
 	GetLesson() lessonService.ILessonService
 	GetExercise() exerciseService.IExerciseService
+	GetExerciseQuestion() exerciseQuestionService.IExerciseQuestionService
+	GetUserCourseProgress() userCourseProgressService.IUserCourseProgressService
 }
 
 func NewServiceRegistry(repository repositories.IRepositoryRegistry) IServiceRegistry {
@@ -67,4 +71,12 @@ func (r *Registry) GetLesson() lessonService.ILessonService {
 
 func (r *Registry) GetExercise() exerciseService.IExerciseService {
 	return exerciseService.NewExerciseService(r.repository)
+}
+
+func (r *Registry) GetExerciseQuestion() exerciseQuestionService.IExerciseQuestionService {
+	return exerciseQuestionService.NewExerciseQuestionService(r.repository)
+}
+
+func (r *Registry) GetUserCourseProgress() userCourseProgressService.IUserCourseProgressService {
+	return userCourseProgressService.NewUserCourseProgressService(r.repository)
 }

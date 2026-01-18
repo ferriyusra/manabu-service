@@ -4,10 +4,12 @@ import (
 	categoryRepo "manabu-service/repositories/category"
 	courseRepo "manabu-service/repositories/course"
 	exerciseRepo "manabu-service/repositories/exercise"
+	exerciseQuestionRepo "manabu-service/repositories/exercise_question"
 	jlptLevelRepo "manabu-service/repositories/jlpt_level"
 	lessonRepo "manabu-service/repositories/lesson"
 	tagRepo "manabu-service/repositories/tag"
 	repositories "manabu-service/repositories/user"
+	userCourseProgressRepo "manabu-service/repositories/user_course_progress"
 	userVocabStatusRepo "manabu-service/repositories/user_vocabulary_status"
 	vocabularyRepo "manabu-service/repositories/vocabulary"
 
@@ -28,6 +30,8 @@ type IRepositoryRegistry interface {
 	GetCourse() courseRepo.ICourseRepository
 	GetLesson() lessonRepo.ILessonRepository
 	GetExercise() exerciseRepo.IExerciseRepository
+	GetExerciseQuestion() exerciseQuestionRepo.IExerciseQuestionRepository
+	GetUserCourseProgress() userCourseProgressRepo.IUserCourseProgressRepository
 }
 
 func NewRepositoryRegistry(db *gorm.DB) IRepositoryRegistry {
@@ -68,4 +72,12 @@ func (r *Registry) GetLesson() lessonRepo.ILessonRepository {
 
 func (r *Registry) GetExercise() exerciseRepo.IExerciseRepository {
 	return exerciseRepo.NewExerciseRepository(r.db)
+}
+
+func (r *Registry) GetExerciseQuestion() exerciseQuestionRepo.IExerciseQuestionRepository {
+	return exerciseQuestionRepo.NewExerciseQuestionRepository(r.db)
+}
+
+func (r *Registry) GetUserCourseProgress() userCourseProgressRepo.IUserCourseProgressRepository {
+	return userCourseProgressRepo.NewUserCourseProgressRepository(r.db)
 }

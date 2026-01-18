@@ -27,6 +27,8 @@ func (r *ExerciseRoute) Run() {
 	// Public endpoints
 	exerciseGroup.GET("", r.controller.GetExerciseController().GetAll)
 	exerciseGroup.GET("/:id", r.controller.GetExerciseController().GetByID)
+	// Nested route: Get questions by exercise ID
+	exerciseGroup.GET("/:id/questions", r.controller.GetExerciseQuestionController().GetByExerciseID)
 
 	// Admin endpoints (require authentication)
 	exerciseGroup.POST("", middlewares.Authenticate(), r.controller.GetExerciseController().Create)

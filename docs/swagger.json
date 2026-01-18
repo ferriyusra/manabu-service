@@ -1305,6 +1305,433 @@
                 }
             }
         },
+        "/exercise-questions": {
+            "get": {
+                "description": "Retrieve exercise questions with advanced filtering, search, sorting, and pagination. Note: CorrectAnswer and Explanation are hidden for security.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Get all Exercise Questions (Public)",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Filter by Exercise ID",
+                        "name": "exerciseId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"multiple_choice\"",
+                        "description": "Filter by Question Type (multiple_choice, fill_blank, matching, listening, speaking)",
+                        "name": "questionType",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": true,
+                        "description": "Filter by publication status",
+                        "name": "isPublished",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"hiragana\"",
+                        "description": "Search in question text and explanation",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "order_index",
+                        "example": "\"order_index\"",
+                        "description": "Sort by field (order_index, question_text, created_at, points)",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "asc",
+                        "example": "\"asc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseQuestionListSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new question for an exercise (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Create Exercise Question",
+                "parameters": [
+                    {
+                        "description": "Question details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateExerciseQuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseQuestionSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Question with this order_index already exists for this exercise",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid exercise ID, question type, points, or order_index",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercise-questions/{id}": {
+            "get": {
+                "description": "Retrieve a specific exercise question by ID. Note: CorrectAnswer and Explanation are hidden for security.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Get Exercise Question by ID (Public)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseQuestionSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise question not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing exercise question by ID (admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Update Exercise Question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated question details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateExerciseQuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseQuestionSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise question not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "Question with this order_index already exists for this exercise",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid exercise ID, question type, points, or order_index",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete an exercise question by ID (admin only)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Delete Exercise Question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise question not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercise-questions/{id}/publish": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the publication status of an exercise question by ID (admin only) - PATCH request with isPublished boolean",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercise Questions"
+                ],
+                "summary": "Publish/Unpublish Exercise Question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Publish status (true to publish, false to unpublish)",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.PublishExerciseQuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExerciseQuestionSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Question is already in the requested state",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Exercise question not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/exercises": {
             "get": {
                 "description": "Retrieve exercises with advanced filtering, search, sorting, and pagination",
@@ -1719,6 +2146,68 @@
                     },
                     "422": {
                         "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/exercises/{id}/questions": {
+            "get": {
+                "description": "Retrieve all questions for a specific exercise, ordered by order_index. Note: CorrectAnswer and Explanation are hidden for security.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Get Questions by Exercise ID (Public)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Exercise ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.ExerciseQuestionPublicResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid exercise ID",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2889,6 +3378,305 @@
                 }
             }
         },
+        "/user-course-progress": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve all course progress for the authenticated user with filtering, sorting, and pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Course Progress"
+                ],
+                "summary": "Get All User Course Progress",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"in_progress\"",
+                        "description": "Filter by status (not_started, in_progress, completed)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Filter by Course ID",
+                        "name": "courseId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "last_accessed_at",
+                        "example": "\"last_accessed_at\"",
+                        "description": "Sort by field (last_accessed_at, progress_percentage, started_at)",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "desc",
+                        "example": "\"desc\"",
+                        "description": "Sort order (asc, desc)",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCourseProgressListSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new progress record by enrolling the authenticated user in a course",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Course Progress"
+                ],
+                "summary": "Enroll in Course (Start Progress)",
+                "parameters": [
+                    {
+                        "description": "Course enrollment details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateUserCourseProgressRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCourseProgressSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "409": {
+                        "description": "User already enrolled in this course",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid course ID",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user-course-progress/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a specific course progress record by UUID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Course Progress"
+                ],
+                "summary": "Get User Course Progress by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User Course Progress UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCourseProgressSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "User course progress not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update progress by recording completed lessons count. Status and percentage are auto-calculated.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Course Progress"
+                ],
+                "summary": "Update User Course Progress",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User Course Progress UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated progress details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateUserCourseProgressRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCourseProgressSwaggerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot update completed course",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "User course progress not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid completed lessons count",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user-vocabulary-status": {
             "get": {
                 "security": [
@@ -3775,6 +4563,78 @@
                 }
             }
         },
+        "dto.CreateExerciseQuestionRequest": {
+            "type": "object",
+            "required": [
+                "correctAnswer",
+                "exerciseId",
+                "orderIndex",
+                "points",
+                "questionText",
+                "questionType"
+            ],
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "example": "https://example.com/audio/question1.mp3"
+                },
+                "correctAnswer": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "あ"
+                },
+                "exerciseId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "explanation": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "example": "The Hiragana character for 'a' is あ"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "example": "https://example.com/images/question1.jpg"
+                },
+                "options": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "{\"a\":\"あ\",\"b\":\"い\",\"c\":\"う\",\"d\":\"え\"}"
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "points": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "questionText": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 3,
+                    "example": "What is the correct Hiragana for 'a'?"
+                },
+                "questionType": {
+                    "type": "string",
+                    "enum": [
+                        "multiple_choice",
+                        "fill_blank",
+                        "matching",
+                        "listening",
+                        "speaking"
+                    ],
+                    "example": "multiple_choice"
+                }
+            }
+        },
         "dto.CreateExerciseRequest": {
             "type": "object",
             "required": [
@@ -3917,6 +4777,19 @@
                 }
             }
         },
+        "dto.CreateUserCourseProgressRequest": {
+            "type": "object",
+            "required": [
+                "courseId"
+            ],
+            "properties": {
+                "courseId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                }
+            }
+        },
         "dto.CreateUserVocabStatusRequest": {
             "type": "object",
             "required": [
@@ -4016,6 +4889,156 @@
                 },
                 "pagination": {
                     "$ref": "#/definitions/dto.PaginationResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "dto.ExerciseQuestionListSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ExerciseQuestionResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Exercise questions retrieved successfully"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/dto.PaginationResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "dto.ExerciseQuestionPublicResponse": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "example": "https://example.com/audio/question1.mp3"
+                },
+                "exercise": {
+                    "$ref": "#/definitions/dto.ExerciseResponse"
+                },
+                "exerciseId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://example.com/images/question1.jpg"
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "options": {
+                    "type": "string",
+                    "example": "{\"a\":\"あ\",\"b\":\"い\",\"c\":\"う\",\"d\":\"え\"}"
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "points": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "publishedAt": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "questionText": {
+                    "type": "string",
+                    "example": "What is the correct Hiragana for 'a'?"
+                },
+                "questionType": {
+                    "type": "string",
+                    "example": "multiple_choice"
+                }
+            }
+        },
+        "dto.ExerciseQuestionResponse": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "example": "https://example.com/audio/question1.mp3"
+                },
+                "correctAnswer": {
+                    "type": "string",
+                    "example": "あ"
+                },
+                "exercise": {
+                    "$ref": "#/definitions/dto.ExerciseResponse"
+                },
+                "exerciseId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "explanation": {
+                    "type": "string",
+                    "example": "The Hiragana character for 'a' is あ"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://example.com/images/question1.jpg"
+                },
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "options": {
+                    "type": "string",
+                    "example": "{\"a\":\"あ\",\"b\":\"い\",\"c\":\"う\",\"d\":\"え\"}"
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "points": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "publishedAt": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "questionText": {
+                    "type": "string",
+                    "example": "What is the correct Hiragana for 'a'?"
+                },
+                "questionType": {
+                    "type": "string",
+                    "example": "multiple_choice"
+                }
+            }
+        },
+        "dto.ExerciseQuestionSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.ExerciseQuestionResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Exercise question created successfully"
                 },
                 "status": {
                     "type": "string",
@@ -4237,6 +5260,18 @@
                 }
             }
         },
+        "dto.PublishExerciseQuestionRequest": {
+            "type": "object",
+            "required": [
+                "isPublished"
+            ],
+            "properties": {
+                "isPublished": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
         "dto.PublishExerciseRequest": {
             "type": "object",
             "required": [
@@ -4441,6 +5476,78 @@
                 }
             }
         },
+        "dto.UpdateExerciseQuestionRequest": {
+            "type": "object",
+            "required": [
+                "correctAnswer",
+                "exerciseId",
+                "orderIndex",
+                "points",
+                "questionText",
+                "questionType"
+            ],
+            "properties": {
+                "audioUrl": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "example": "https://example.com/audio/question1.mp3"
+                },
+                "correctAnswer": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "example": "あ"
+                },
+                "exerciseId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "explanation": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "example": "The Hiragana character for 'a' is あ"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "example": "https://example.com/images/question1.jpg"
+                },
+                "options": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "{\"a\":\"あ\",\"b\":\"い\",\"c\":\"う\",\"d\":\"え\"}"
+                },
+                "orderIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "points": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "questionText": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 3,
+                    "example": "What is the correct Hiragana for 'a'?"
+                },
+                "questionType": {
+                    "type": "string",
+                    "enum": [
+                        "multiple_choice",
+                        "fill_blank",
+                        "matching",
+                        "listening",
+                        "speaking"
+                    ],
+                    "example": "multiple_choice"
+                }
+            }
+        },
         "dto.UpdateExerciseRequest": {
             "type": "object",
             "required": [
@@ -4608,6 +5715,19 @@
                 }
             }
         },
+        "dto.UpdateUserCourseProgressRequest": {
+            "type": "object",
+            "required": [
+                "completedLessons"
+            ],
+            "properties": {
+                "completedLessons": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 5
+                }
+            }
+        },
         "dto.UpdateVocabularyRequest": {
             "type": "object",
             "required": [
@@ -4676,6 +5796,92 @@
                     "maxLength": 255,
                     "minLength": 1,
                     "example": "犬"
+                }
+            }
+        },
+        "dto.UserCourseProgressListSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserCourseProgressResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "User course progress retrieved successfully"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/dto.PaginationResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "dto.UserCourseProgressResponse": {
+            "type": "object",
+            "properties": {
+                "completedAt": {
+                    "type": "string",
+                    "example": "2024-02-15T10:30:00Z"
+                },
+                "completedLessons": {
+                    "type": "integer",
+                    "example": 5
+                },
+                "course": {
+                    "$ref": "#/definitions/dto.CourseResponse"
+                },
+                "courseId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "lastAccessedAt": {
+                    "type": "string",
+                    "example": "2024-01-20T14:30:00Z"
+                },
+                "progressPercentage": {
+                    "type": "number",
+                    "example": 50
+                },
+                "startedAt": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "in_progress"
+                },
+                "totalLessons": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "userId": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "dto.UserCourseProgressSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.UserCourseProgressResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "User course progress created successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         },

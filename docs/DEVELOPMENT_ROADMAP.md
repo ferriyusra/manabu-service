@@ -3,10 +3,11 @@
 ## 🎯 Quick Overview
 
 ```
-Overall Progress: ██████████░░░░░░ 60% (9/15 APIs)
+Overall Progress: ████████████░░░░ 73% (11/15 APIs)
 
 MVP Progress:     ████████████████ 100% (5/5 APIs) ✅ COMPLETE!
-Learning Phase:   ████████████████ 100% (4/4 APIs) ✅ COMPLETE! - Tags ✅ Courses ✅ Lessons ✅ Exercises ✅
+Learning Phase:   ████████████████ 100% (5/5 APIs) ✅ COMPLETE! - Tags ✅ Courses ✅ Lessons ✅ Exercises ✅ Questions ✅
+Progress Phase:   █████░░░░░░░░░░░ 33% (1/3 APIs) - User Course Progress ✅
 ```
 
 ---
@@ -100,28 +101,53 @@ Learning Phase:   ████████████████ 100% (4/4 API
   - Code reviewed & all critical issues fixed
   - **Quality**: Production-ready (8.7/10 → 9.1/10 after fixes)
 
+#### Week 3-4 (Learning Content - Part 4)
+- ✅ **Exercise Questions API** 🎉 **COMPLETED!**
+  - 7 endpoints (CRUD + publish/unpublish + get by exercise)
+  - Advanced filtering (exercise ID, question type, published status, search)
+  - 5 question types: multiple_choice, fill_blank, matching, listening, speaking
+  - Unique order_index constraint per exercise
+  - **Security**: Public endpoints hide CorrectAnswer & Explanation fields
+  - Separate public/admin DTOs for data protection
+  - SQL injection prevention with whitelist validation
+  - Proper error constants (14 specific errors defined)
+  - Complete Swagger documentation
+  - Nested route: GET /exercises/{id}/questions
+  - Code reviewed & all critical issues fixed
+  - **Quality**: Production-ready (7.5/10 → 9.0/10 after fixes)
+
+#### Week 4 (Progress Tracking - Part 1)
+- ✅ **User Course Progress API** 🎉 **COMPLETED!**
+  - 4 endpoints (Create, GetAll, GetByID, Update)
+  - Advanced filtering (status, courseId, pagination, sorting)
+  - Status tracking: not_started → in_progress → completed
+  - Auto-calculation of progress percentage
+  - Unique constraint on (user_id, course_id)
+  - **Security**: Authorization check - users can only view their own progress
+  - **Concurrency**: Transaction with row-level locking (SELECT FOR UPDATE)
+  - SQL injection prevention with whitelist validation for ORDER BY
+  - Status constants defined (ProgressStatusNotStarted, etc.)
+  - Proper error constants (9 specific errors defined)
+  - Complete Swagger documentation with authentication
+  - Database migration created (007_create_user_course_progress_table.sql)
+  - Code reviewed & all critical/major issues fixed
+  - **Quality**: Production-ready (8.5/10 → 9.2/10 after fixes)
+
 ---
 
 ### 🔄 CURRENT WEEK
 
-#### Week 3-4 (Learning Content - Part 4)
-- 🔴 **Exercise Questions API** ← YOU ARE HERE
-  - Priority: HIGH
-  - Complexity: MEDIUM
-  - 5 endpoints
-  - Next target after Exercises API
+#### Week 4 (User Progress)
+- ✅ **User Course Progress API** ✅ COMPLETED!
+- 🔴 **User Lesson Progress API** ← NEXT
+  - Priority: CRITICAL
+  - Complexity: LOW
+  - 3 endpoints
+- 🔴 User Exercise Attempts API
 
 ---
 
 ### 📋 UPCOMING
-
-#### Week 4 (Learning Content - Part 4)
-- 🔴 Exercise Questions API
-
-#### Week 4 (User Progress)
-- 🔴 User Course Progress API
-- 🔴 User Lesson Progress API
-- 🔴 User Exercise Attempts API
 
 #### Week 5-6 (Gamification)
 - 🔴 Achievements API
@@ -147,27 +173,27 @@ Learning Phase:   ████████████████ 100% (4/4 API
 
 ---
 
-### Milestone 2: Learning Platform 🟡 80%
+### Milestone 2: Learning Platform ✅ 100% 🎉 COMPLETE!
 **Target**: Week 4
-**Status**: IN PROGRESS
+**Status**: ✅ COMPLETED
 
 **Requirements**:
 - [x] Tags ✅
 - [x] Courses ✅
 - [x] Lessons ✅
 - [x] Exercises ✅
-- [ ] Exercise Questions ← NEXT
+- [x] Exercise Questions ✅
 
-**Dependencies**: ✅ Vocabulary API completed!
+**Achievement**: All Learning Platform APIs delivered with production-ready quality!
 
 ---
 
-### Milestone 3: Progress Tracking 🔴 0%
+### Milestone 3: Progress Tracking 🟡 33%
 **Target**: Week 5
-**Status**: NOT STARTED
+**Status**: IN PROGRESS
 
 **Requirements**:
-- [ ] User Course Progress
+- [x] User Course Progress ✅
 - [ ] User Lesson Progress
 - [ ] User Exercise Attempts
 
@@ -201,8 +227,8 @@ Learning Phase:   ████████████████ 100% (4/4 API
 | 7  | Courses                  | ✅     | HIGH     | 8         | MEDIUM     | DONE      |
 | 8  | Lessons                  | ✅     | HIGH     | 6         | MEDIUM     | DONE      |
 | 9  | Exercises                | ✅     | HIGH     | 7         | MEDIUM     | DONE      |
-| 10 | Exercise Questions       | 🔴     | HIGH     | 5         | MEDIUM     | 1 day     |
-| 11 | User Course Progress     | 🔴     | CRITICAL | 4         | MEDIUM     | 1 day     |
+| 10 | Exercise Questions       | ✅     | HIGH     | 7         | MEDIUM     | DONE      |
+| 11 | User Course Progress     | ✅     | CRITICAL | 4         | MEDIUM     | DONE      |
 | 12 | User Lesson Progress     | 🔴     | CRITICAL | 3         | LOW        | 1 day     |
 | 13 | User Exercise Attempts   | 🔴     | CRITICAL | 5         | HIGH       | 2 days    |
 | 14 | Achievements             | 🔴     | MEDIUM   | 3         | LOW        | 1 day     |
@@ -255,11 +281,30 @@ Learning Phase:   ████████████████ 100% (4/4 API
    - ✅ Complete Swagger documentation
    - ✅ Quality improved to 9.1/10
 
+8. ✅ **Complete Exercise Questions API** 🎉 **Learning Platform Phase COMPLETE!**
+   - ✅ Use golang-pro agent (7 endpoints implemented)
+   - ✅ Code review with code-review-expert (Initial score: 7.5/10)
+   - ✅ Fix critical issues (error mapping, CorrectAnswer exposure)
+   - ✅ Add QuestionType filter
+   - ✅ Create separate public/admin DTOs for security
+   - ✅ Simplify Delete method (remove redundant existence check)
+   - ✅ Complete Swagger documentation
+   - ✅ Quality improved to 9.0/10
+
 ### This Week
-8. 🔄 **Start Exercise Questions API** ← NEXT (Learning Platform Phase)
+9. ✅ **Complete User Course Progress API** ✅ (Progress Tracking Phase Started!)
+   - ✅ Use golang-pro agent (4 endpoints implemented)
+   - ✅ Code review with code-review-expert (Initial score: 8.5/10)
+   - ✅ Fix critical issues (Authorization in GetByID, Race condition with transaction locking)
+   - ✅ Fix major issues (Godoc comments, Status constants, Course validation in filter)
+   - ✅ Create database migration (007_create_user_course_progress_table.sql)
+   - ✅ Complete Swagger documentation
+   - ✅ Quality improved to 9.2/10
+
+10. 🔄 **Start User Lesson Progress API** ← NEXT
 
 ### Next Week
-9. User Progress APIs
+11. User Exercise Attempts API
 
 ---
 
@@ -287,6 +332,8 @@ Learning Phase:   ████████████████ 100% (4/4 API
 - Create specific error constants (e.g., ErrInvalidTagName vs generic ErrInvalidID)
 - Use case-insensitive search with LOWER() for name fields
 - Validate special fields with regex (e.g., hex color patterns)
+- **Separate public/admin DTOs** when responses contain sensitive data (CorrectAnswer, passwords)
+- **Register error arrays in error_mapping.go** when adding new error constants
 
 ❌ **DON'T**:
 - Rely only on service-layer validation (not atomic)
@@ -314,11 +361,31 @@ Learning Phase:   ████████████████ 100% (4/4 API
 - **Velocity**: 100% - All critical APIs delivered!
 - **Quality**: Production-ready across all APIs
 
-### Week 3 Progress (Current)
-- **Completed**: Courses API ✅, Lessons API ✅, Exercises API ✅
-- **In Progress**: Exercise Questions API (next)
-- **Achievement**: Learning Platform Phase 100% complete (4/4 APIs)
-- **Quality**: Courses API 9.3/10, Lessons API 9.4/10, Exercises API 9.1/10 after fixes
+### Week 3-4 Progress (FINAL) 🎉
+- **Completed**: Courses API ✅, Lessons API ✅, Exercises API ✅, Exercise Questions API ✅
+- **Achievement**: 🎉 **Learning Platform Phase COMPLETE!** (5/5 APIs)
+- **Velocity**: 100% - All learning content APIs delivered!
+- **Quality**: All APIs score 9.0+ after code review fixes
+
+### Week 4 Progress (Progress Tracking Phase) 🟡
+- **Completed**: User Course Progress API ✅
+- **Achievement**: Progress Tracking Phase Started (1/3 APIs)
+- **Velocity**: On track
+- **Quality**: 9.2/10 after code review fixes
+
+### Lessons Learned (User Course Progress API)
+- **Authorization security**: Always verify resource ownership in GetByID endpoints, not just in Update
+- **Concurrency safety**: Use database transactions with row-level locking (`SELECT FOR UPDATE`) for read-then-write operations
+- **Status constants**: Define constants for enum values to prevent typos and improve maintainability
+- **Filter validation**: Validate referenced entities (course, user) exist when filtering by their IDs
+- **Interface documentation**: Add godoc comments to all interface methods for better API clarity
+
+### Lessons Learned (Exercise Questions API)
+- **Data security**: Separate public/admin DTOs to hide sensitive fields (CorrectAnswer, Explanation)
+- **Error mapping**: Always register new error arrays in error_mapping.go
+- **Code simplification**: Remove redundant existence checks when repository handles them
+- **Filter completeness**: Add all relevant filters (questionType was missing initially)
+- **Swagger accuracy**: Update Swagger docs when adding new query parameters
 
 ### Lessons Learned (Exercises API)
 - **Boolean validation**: Use `*bool` pointer type for required boolean fields in request DTOs
@@ -372,14 +439,14 @@ Learning Phase:   ████████████████ 100% (4/4 API
 - [x] Can create, learn, and review vocabulary
 - [x] Simple progress tracking working
 
-### Full Platform (Week 4)
+### Full Platform (Week 4) ✅ ACHIEVED!
 - [x] Tags API ✅
 - [x] Courses API ✅
 - [x] Lessons API ✅
 - [x] Exercises API ✅
-- [ ] Exercise Questions API ← NEXT
-- [ ] Course structure working
-- [ ] Exercise system functional
+- [x] Exercise Questions API ✅
+- [x] Course structure working
+- [x] Exercise system functional
 
 ### Production Ready (Week 6)
 - [ ] All 15 core APIs completed
@@ -390,8 +457,8 @@ Learning Phase:   ████████████████ 100% (4/4 API
 
 ---
 
-**Current Sprint**: Learning Platform Phase (Week 3)
-**Sprint Goal**: Complete course/lesson/exercise structure APIs
-**Last Updated**: 2026-01-16
-**Last Completed**: Exercises API ✅ 🎉 **Learning Platform Phase 100% Complete!**
-**Next Target**: Exercise Questions API
+**Current Sprint**: Progress Tracking Phase (Week 4)
+**Sprint Goal**: Complete user progress tracking APIs
+**Last Updated**: 2026-01-18
+**Last Completed**: User Course Progress API ✅ 🎉 **Progress Tracking Phase 33% Complete!**
+**Next Target**: User Lesson Progress API

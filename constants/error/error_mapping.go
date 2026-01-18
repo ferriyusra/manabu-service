@@ -10,6 +10,10 @@ func ErrMapping(err error) bool {
 	allErrors = append(allErrors, TagErrors[:]...)
 	allErrors = append(allErrors, UserVocabularyStatusErrors[:]...)
 	allErrors = append(allErrors, CourseErrors[:]...)
+	allErrors = append(allErrors, LessonErrors[:]...)
+	allErrors = append(allErrors, ExerciseErrors[:]...)
+	allErrors = append(allErrors, ExerciseQuestionErrors[:]...)
+	allErrors = append(allErrors, UserCourseProgressErrors[:]...)
 
 	for _, item := range allErrors {
 		if err.Error() == item.Error() {

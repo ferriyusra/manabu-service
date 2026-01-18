@@ -127,6 +127,64 @@ definitions:
     - jlptLevelId
     - title
     type: object
+  dto.CreateExerciseQuestionRequest:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/question1.mp3
+        maxLength: 500
+        type: string
+      correctAnswer:
+        example: あ
+        maxLength: 500
+        minLength: 1
+        type: string
+      exerciseId:
+        example: 1
+        minimum: 1
+        type: integer
+      explanation:
+        example: The Hiragana character for 'a' is あ
+        maxLength: 1000
+        type: string
+      imageUrl:
+        example: https://example.com/images/question1.jpg
+        maxLength: 500
+        type: string
+      options:
+        example: '{"a":"あ","b":"い","c":"う","d":"え"}'
+        maxLength: 2000
+        type: string
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      points:
+        example: 10
+        maximum: 100
+        minimum: 1
+        type: integer
+      questionText:
+        example: What is the correct Hiragana for 'a'?
+        maxLength: 1000
+        minLength: 3
+        type: string
+      questionType:
+        enum:
+        - multiple_choice
+        - fill_blank
+        - matching
+        - listening
+        - speaking
+        example: multiple_choice
+        type: string
+    required:
+    - correctAnswer
+    - exerciseId
+    - orderIndex
+    - points
+    - questionText
+    - questionType
+    type: object
   dto.CreateExerciseRequest:
     properties:
       description:
@@ -237,6 +295,15 @@ definitions:
     required:
     - name
     type: object
+  dto.CreateUserCourseProgressRequest:
+    properties:
+      courseId:
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - courseId
+    type: object
   dto.CreateUserVocabStatusRequest:
     properties:
       vocabularyId:
@@ -313,6 +380,114 @@ definitions:
         type: string
       pagination:
         $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.ExerciseQuestionListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.ExerciseQuestionResponse'
+        type: array
+      message:
+        example: Exercise questions retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.ExerciseQuestionPublicResponse:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/question1.mp3
+        type: string
+      exercise:
+        $ref: '#/definitions/dto.ExerciseResponse'
+      exerciseId:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      imageUrl:
+        example: https://example.com/images/question1.jpg
+        type: string
+      isPublished:
+        example: true
+        type: boolean
+      options:
+        example: '{"a":"あ","b":"い","c":"う","d":"え"}'
+        type: string
+      orderIndex:
+        example: 1
+        type: integer
+      points:
+        example: 10
+        type: integer
+      publishedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      questionText:
+        example: What is the correct Hiragana for 'a'?
+        type: string
+      questionType:
+        example: multiple_choice
+        type: string
+    type: object
+  dto.ExerciseQuestionResponse:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/question1.mp3
+        type: string
+      correctAnswer:
+        example: あ
+        type: string
+      exercise:
+        $ref: '#/definitions/dto.ExerciseResponse'
+      exerciseId:
+        example: 1
+        type: integer
+      explanation:
+        example: The Hiragana character for 'a' is あ
+        type: string
+      id:
+        example: 1
+        type: integer
+      imageUrl:
+        example: https://example.com/images/question1.jpg
+        type: string
+      isPublished:
+        example: true
+        type: boolean
+      options:
+        example: '{"a":"あ","b":"い","c":"う","d":"え"}'
+        type: string
+      orderIndex:
+        example: 1
+        type: integer
+      points:
+        example: 10
+        type: integer
+      publishedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      questionText:
+        example: What is the correct Hiragana for 'a'?
+        type: string
+      questionType:
+        example: multiple_choice
+        type: string
+    type: object
+  dto.ExerciseQuestionSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.ExerciseQuestionResponse'
+      message:
+        example: Exercise question created successfully
+        type: string
       status:
         example: success
         type: string
@@ -468,6 +643,14 @@ definitions:
         example: 5
         type: integer
     type: object
+  dto.PublishExerciseQuestionRequest:
+    properties:
+      isPublished:
+        example: true
+        type: boolean
+    required:
+    - isPublished
+    type: object
   dto.PublishExerciseRequest:
     properties:
       isPublished:
@@ -614,6 +797,64 @@ definitions:
     - jlptLevelId
     - title
     type: object
+  dto.UpdateExerciseQuestionRequest:
+    properties:
+      audioUrl:
+        example: https://example.com/audio/question1.mp3
+        maxLength: 500
+        type: string
+      correctAnswer:
+        example: あ
+        maxLength: 500
+        minLength: 1
+        type: string
+      exerciseId:
+        example: 1
+        minimum: 1
+        type: integer
+      explanation:
+        example: The Hiragana character for 'a' is あ
+        maxLength: 1000
+        type: string
+      imageUrl:
+        example: https://example.com/images/question1.jpg
+        maxLength: 500
+        type: string
+      options:
+        example: '{"a":"あ","b":"い","c":"う","d":"え"}'
+        maxLength: 2000
+        type: string
+      orderIndex:
+        example: 1
+        minimum: 0
+        type: integer
+      points:
+        example: 10
+        maximum: 100
+        minimum: 1
+        type: integer
+      questionText:
+        example: What is the correct Hiragana for 'a'?
+        maxLength: 1000
+        minLength: 3
+        type: string
+      questionType:
+        enum:
+        - multiple_choice
+        - fill_blank
+        - matching
+        - listening
+        - speaking
+        example: multiple_choice
+        type: string
+    required:
+    - correctAnswer
+    - exerciseId
+    - orderIndex
+    - points
+    - questionText
+    - questionType
+    type: object
   dto.UpdateExerciseRequest:
     properties:
       description:
@@ -741,6 +982,15 @@ definitions:
         minLength: 1
         type: string
     type: object
+  dto.UpdateUserCourseProgressRequest:
+    properties:
+      completedLessons:
+        example: 5
+        minimum: 0
+        type: integer
+    required:
+    - completedLessons
+    type: object
   dto.UpdateVocabularyRequest:
     properties:
       audioUrl:
@@ -796,6 +1046,67 @@ definitions:
     - jlptLevelId
     - meaning
     - word
+    type: object
+  dto.UserCourseProgressListSwaggerResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.UserCourseProgressResponse'
+        type: array
+      message:
+        example: User course progress retrieved successfully
+        type: string
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+      status:
+        example: success
+        type: string
+    type: object
+  dto.UserCourseProgressResponse:
+    properties:
+      completedAt:
+        example: "2024-02-15T10:30:00Z"
+        type: string
+      completedLessons:
+        example: 5
+        type: integer
+      course:
+        $ref: '#/definitions/dto.CourseResponse'
+      courseId:
+        example: 1
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      lastAccessedAt:
+        example: "2024-01-20T14:30:00Z"
+        type: string
+      progressPercentage:
+        example: 50
+        type: number
+      startedAt:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      status:
+        example: in_progress
+        type: string
+      totalLessons:
+        example: 10
+        type: integer
+      userId:
+        example: 1
+        type: integer
+    type: object
+  dto.UserCourseProgressSwaggerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.UserCourseProgressResponse'
+      message:
+        example: User course progress created successfully
+        type: string
+      status:
+        example: success
+        type: string
     type: object
   dto.UserResponse:
     properties:
@@ -1792,6 +2103,292 @@ paths:
       summary: Get Published Courses
       tags:
       - Courses
+  /exercise-questions:
+    get:
+      description: 'Retrieve exercise questions with advanced filtering, search, sorting,
+        and pagination. Note: CorrectAnswer and Explanation are hidden for security.'
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by Exercise ID
+        example: 1
+        in: query
+        name: exerciseId
+        type: integer
+      - description: Filter by Question Type (multiple_choice, fill_blank, matching,
+          listening, speaking)
+        example: '"multiple_choice"'
+        in: query
+        name: questionType
+        type: string
+      - description: Filter by publication status
+        example: true
+        in: query
+        name: isPublished
+        type: boolean
+      - description: Search in question text and explanation
+        example: '"hiragana"'
+        in: query
+        name: search
+        type: string
+      - default: order_index
+        description: Sort by field (order_index, question_text, created_at, points)
+        example: '"order_index"'
+        in: query
+        name: sortBy
+        type: string
+      - default: asc
+        description: Sort order (asc, desc)
+        example: '"asc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseQuestionListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get all Exercise Questions (Public)
+      tags:
+      - Exercise Questions
+    post:
+      consumes:
+      - application/json
+      description: Create a new question for an exercise (admin only)
+      parameters:
+      - description: Question details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateExerciseQuestionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ExerciseQuestionSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Question with this order_index already exists for this exercise
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid exercise ID, question type, points, or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Exercise Question
+      tags:
+      - Exercise Questions
+  /exercise-questions/{id}:
+    delete:
+      description: Delete an exercise question by ID (admin only)
+      parameters:
+      - description: Exercise Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise question not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete Exercise Question
+      tags:
+      - Exercise Questions
+    get:
+      description: 'Retrieve a specific exercise question by ID. Note: CorrectAnswer
+        and Explanation are hidden for security.'
+      parameters:
+      - description: Exercise Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseQuestionSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise question not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Exercise Question by ID (Public)
+      tags:
+      - Exercise Questions
+    put:
+      consumes:
+      - application/json
+      description: Update an existing exercise question by ID (admin only)
+      parameters:
+      - description: Exercise Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated question details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateExerciseQuestionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseQuestionSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise question not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Question with this order_index already exists for this exercise
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid exercise ID, question type, points, or order_index
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update Exercise Question
+      tags:
+      - Exercise Questions
+  /exercise-questions/{id}/publish:
+    patch:
+      consumes:
+      - application/json
+      description: Update the publication status of an exercise question by ID (admin
+        only) - PATCH request with isPublished boolean
+      parameters:
+      - description: Exercise Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Publish status (true to publish, false to unpublish)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PublishExerciseQuestionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ExerciseQuestionSwaggerResponse'
+        "400":
+          description: Question is already in the requested state
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Exercise question not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Publish/Unpublish Exercise Question
+      tags:
+      - Exercise Questions
   /exercises:
     get:
       description: Retrieve exercises with advanced filtering, search, sorting, and
@@ -2075,6 +2672,45 @@ paths:
       security:
       - BearerAuth: []
       summary: Publish/Unpublish Exercise
+      tags:
+      - Exercises
+  /exercises/{id}/questions:
+    get:
+      description: 'Retrieve all questions for a specific exercise, ordered by order_index.
+        Note: CorrectAnswer and Explanation are hidden for security.'
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.ExerciseQuestionPublicResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid exercise ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Questions by Exercise ID (Public)
       tags:
       - Exercises
   /jlpt-levels:
@@ -2822,6 +3458,206 @@ paths:
       summary: Search Tag by name
       tags:
       - Tags
+  /user-course-progress:
+    get:
+      description: Retrieve all course progress for the authenticated user with filtering,
+        sorting, and pagination
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: Filter by status (not_started, in_progress, completed)
+        example: '"in_progress"'
+        in: query
+        name: status
+        type: string
+      - description: Filter by Course ID
+        example: 1
+        in: query
+        name: courseId
+        type: integer
+      - default: last_accessed_at
+        description: Sort by field (last_accessed_at, progress_percentage, started_at)
+        example: '"last_accessed_at"'
+        in: query
+        name: sortBy
+        type: string
+      - default: desc
+        description: Sort order (asc, desc)
+        example: '"desc"'
+        in: query
+        name: sortOrder
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserCourseProgressListSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get All User Course Progress
+      tags:
+      - User Course Progress
+    post:
+      consumes:
+      - application/json
+      description: Create a new progress record by enrolling the authenticated user
+        in a course
+      parameters:
+      - description: Course enrollment details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserCourseProgressRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserCourseProgressSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: User already enrolled in this course
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid course ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Enroll in Course (Start Progress)
+      tags:
+      - User Course Progress
+  /user-course-progress/{id}:
+    get:
+      description: Retrieve a specific course progress record by UUID
+      parameters:
+      - description: User Course Progress UUID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserCourseProgressSwaggerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User course progress not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get User Course Progress by ID
+      tags:
+      - User Course Progress
+    put:
+      consumes:
+      - application/json
+      description: Update progress by recording completed lessons count. Status and
+        percentage are auto-calculated.
+      parameters:
+      - description: User Course Progress UUID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated progress details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserCourseProgressRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserCourseProgressSwaggerResponse'
+        "400":
+          description: Cannot update completed course
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: User course progress not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Invalid completed lessons count
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Update User Course Progress
+      tags:
+      - User Course Progress
   /user-vocabulary-status:
     get:
       description: Retrieve all vocabulary that the authenticated user is learning

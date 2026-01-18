@@ -5,10 +5,12 @@ import (
 	categoryRoute "manabu-service/routes/category"
 	courseRoute "manabu-service/routes/course"
 	exerciseRoute "manabu-service/routes/exercise"
+	exerciseQuestionRoute "manabu-service/routes/exercise_question"
 	jlptLevelRoute "manabu-service/routes/jlpt_level"
 	lessonRoute "manabu-service/routes/lesson"
 	tagRoute "manabu-service/routes/tag"
 	routes "manabu-service/routes/user"
+	userCourseProgressRoute "manabu-service/routes/user_course_progress"
 	userVocabStatusRoute "manabu-service/routes/user_vocabulary_status"
 	vocabularyRoute "manabu-service/routes/vocabulary"
 
@@ -38,6 +40,8 @@ func (r *Registry) Serve() {
 	r.courseRoute().Run()
 	r.lessonRoute().Run()
 	r.exerciseRoute().Run()
+	r.exerciseQuestionRoute().Run()
+	r.userCourseProgressRoute().Run()
 }
 
 func (r *Registry) userRoute() routes.IUserRoute {
@@ -74,4 +78,12 @@ func (r *Registry) lessonRoute() lessonRoute.ILessonRoute {
 
 func (r *Registry) exerciseRoute() exerciseRoute.IExerciseRoute {
 	return exerciseRoute.NewExerciseRoute(r.controller, r.group)
+}
+
+func (r *Registry) exerciseQuestionRoute() exerciseQuestionRoute.IExerciseQuestionRoute {
+	return exerciseQuestionRoute.NewExerciseQuestionRoute(r.controller, r.group)
+}
+
+func (r *Registry) userCourseProgressRoute() userCourseProgressRoute.IUserCourseProgressRoute {
+	return userCourseProgressRoute.NewUserCourseProgressRoute(r.controller, r.group)
 }

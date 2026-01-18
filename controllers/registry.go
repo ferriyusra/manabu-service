@@ -4,10 +4,12 @@ import (
 	categoryController "manabu-service/controllers/category"
 	courseController "manabu-service/controllers/course"
 	exerciseController "manabu-service/controllers/exercise"
+	exerciseQuestionController "manabu-service/controllers/exercise_question"
 	jlptLevelController "manabu-service/controllers/jlpt_level"
 	lessonController "manabu-service/controllers/lesson"
 	tagController "manabu-service/controllers/tag"
 	controllers "manabu-service/controllers/user"
+	userCourseProgressController "manabu-service/controllers/user_course_progress"
 	userVocabStatusController "manabu-service/controllers/user_vocabulary_status"
 	vocabularyController "manabu-service/controllers/vocabulary"
 	"manabu-service/services"
@@ -27,6 +29,8 @@ type IControllerRegistry interface {
 	GetCourseController() courseController.ICourseController
 	GetLessonController() lessonController.ILessonController
 	GetExerciseController() exerciseController.IExerciseController
+	GetExerciseQuestionController() exerciseQuestionController.IExerciseQuestionController
+	GetUserCourseProgressController() userCourseProgressController.IUserCourseProgressController
 }
 
 func NewControllerRegistry(service services.IServiceRegistry) IControllerRegistry {
@@ -67,4 +71,12 @@ func (u *Registry) GetLessonController() lessonController.ILessonController {
 
 func (u *Registry) GetExerciseController() exerciseController.IExerciseController {
 	return exerciseController.NewExerciseController(u.service)
+}
+
+func (u *Registry) GetExerciseQuestionController() exerciseQuestionController.IExerciseQuestionController {
+	return exerciseQuestionController.NewExerciseQuestionController(u.service)
+}
+
+func (u *Registry) GetUserCourseProgressController() userCourseProgressController.IUserCourseProgressController {
+	return userCourseProgressController.NewUserCourseProgressController(u.service)
 }
